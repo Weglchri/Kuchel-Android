@@ -1,0 +1,25 @@
+package at.kuchel.kuchelapp.builder;
+
+
+import at.kuchel.kuchelapp.api.RecipeApi;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+
+import static at.kuchel.kuchelapp.Constant.BASE_URL;
+
+/**
+ * Created by bernhard on 15.03.2018.
+ */
+
+public class RetrofitBuilder {
+
+    public static RecipeApi createRecipeApi() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(RecipeApi.class);
+    }
+}

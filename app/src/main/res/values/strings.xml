@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Kuchel App</string>
+    <string name="title_recipe_detail">Recipe Details</string>
+</resources>
