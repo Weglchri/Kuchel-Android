@@ -15,8 +15,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import at.kuchel.kuchelapp.builder.RetrofitBuilder;
 import at.kuchel.kuchelapp.dummy.DummyContent;
+import at.kuchel.kuchelapp.model.Recipe;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +41,7 @@ public class RecipeListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    private List<Recipe> recipes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,20 +70,36 @@ public class RecipeListActivity extends AppCompatActivity {
         }
 
 
-        View recyclerView = findViewById(R.id.recipe_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        //todo connection exist load sync instead of cach
+        if(true){
+            Call<List<Recipe>> call = RetrofitBuilder.createRecipeApiAsync().getRecipes();
+
+            call.enqueue(new Callback<List<Recipe>>() {
+                @Override
+                public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                    recipes = response.body();
+                    View recyclerView = findViewById(R.id.recipe_list);
+                    assert recyclerView != null;
+                    setupRecyclerView((RecyclerView) recyclerView);
+                }
+
+                @Override
+                public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                    // Log error here since request failed
+                }
+            });
+        }
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, recipes, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
-        private final List<DummyContent.RecipeItem> mValues;
+        private final List<Recipe> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -100,9 +124,9 @@ public class RecipeListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<DummyContent.RecipeItem> items,
+                                      List<Recipe> recipes,
                                       boolean twoPane) {
-            mValues = items;
+            mValues = recipes;
             mParentActivity = parent;
             mTwoPane = twoPane;
         }
@@ -116,8 +140,8 @@ public class RecipeListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
+            holder.mContentView.setText(mValues.get(position).getName());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

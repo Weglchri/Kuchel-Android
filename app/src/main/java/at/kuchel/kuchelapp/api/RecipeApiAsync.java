@@ -12,7 +12,7 @@ import retrofit2.http.Path;
  * Created by bernhard on 14.03.2018.
  */
 
-public interface RecipeApi {
+public interface RecipeApiAsync {
 
     @GET("recipes/{id}")
     Call<Recipe> getRecipe(@Path("id") String id);
