@@ -16,13 +16,11 @@ import android.widget.TextView;
 
 
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
-import at.kuchel.kuchelapp.dummy.DummyContent;
 import at.kuchel.kuchelapp.model.Recipe;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,26 +67,27 @@ public class RecipeListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        handleAsyncCallAndRedirect();
+    }
 
-        //todo connection exist load sync instead of cach
-        if(true){
-            Call<List<Recipe>> call = RetrofitBuilder.createRecipeApiAsync().getRecipes();
+    private void handleAsyncCallAndRedirect(){
+        Call<List<Recipe>> call = RetrofitBuilder.createRecipeApi().getRecipes();
 
-            call.enqueue(new Callback<List<Recipe>>() {
-                @Override
-                public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                    recipes = response.body();
-                    View recyclerView = findViewById(R.id.recipe_list);
-                    assert recyclerView != null;
-                    setupRecyclerView((RecyclerView) recyclerView);
-                }
+        call.enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                recipes = response.body();
+                View recyclerView = findViewById(R.id.recipe_list);
+                //todo not sure what the next row does
+                assert recyclerView != null;
+                setupRecyclerView((RecyclerView) recyclerView);
+            }
 
-                @Override
-                public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                    // Log error here since request failed
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                // Log error here since request failed
+            }
+        });
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -104,10 +103,10 @@ public class RecipeListActivity extends AppCompatActivity {
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.RecipeItem item = (DummyContent.RecipeItem) view.getTag();
+                Recipe item = (Recipe) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
                     RecipeDetailFragment fragment = new RecipeDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -116,7 +115,7 @@ public class RecipeListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
-                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
 
                     context.startActivity(intent);
                 }

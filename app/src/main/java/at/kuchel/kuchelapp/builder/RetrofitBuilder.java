@@ -1,8 +1,7 @@
 package at.kuchel.kuchelapp.builder;
 
 
-import at.kuchel.kuchelapp.api.RecipeApiAsync;
-import at.kuchel.kuchelapp.api.RecipeApiSync;
+import at.kuchel.kuchelapp.api.RecipeApi;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -15,12 +14,8 @@ import static at.kuchel.kuchelapp.Constant.BASE_URL;
 
 public class RetrofitBuilder {
 
-    public static RecipeApiAsync createRecipeApiAsync() {
-        return createRetrofit().create(RecipeApiAsync.class);
-    }
-
-    public static RecipeApiSync createRecipeApiSync() {
-        return createRetrofit().create(RecipeApiSync.class);
+    public static RecipeApi createRecipeApi() {
+        return createRetrofit().create(RecipeApi.class);
     }
 
     private static Retrofit createRetrofit() {
