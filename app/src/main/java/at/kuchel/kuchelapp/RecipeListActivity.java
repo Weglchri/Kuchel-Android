@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -98,7 +99,7 @@ public class RecipeListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
-        private final List<Recipe> mValues;
+        private final List<Recipe> recipes;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -125,7 +126,7 @@ public class RecipeListActivity extends AppCompatActivity {
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
                                       List<Recipe> recipes,
                                       boolean twoPane) {
-            mValues = recipes;
+            this.recipes = recipes;
             mParentActivity = parent;
             mTwoPane = twoPane;
         }
@@ -139,18 +140,18 @@ public class RecipeListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
-            holder.mNameView.setText(mValues.get(position).getName());
-            holder.mDurationView.setText(mValues.get(position).getDuration());
-            holder.mDifficultyView.setText(mValues.get(position).getDifficulty());
+            holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
+            holder.mNameView.setText(recipes.get(position).getName());
+            holder.mDurationView.setText(recipes.get(position).getDuration());
+            holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
 
-            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setTag(recipes.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return recipes.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
