@@ -80,7 +80,8 @@ public class RecipeDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (recipe != null) {
-            ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(recipe.getName());
+            //todo find the purpose for this
+//            ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(recipe.getName());
         }
 
         return rootView;

@@ -11,6 +11,10 @@ public class Recipe {
 
     private String name;
 
+    private String duration;
+
+    private String difficulty;
+
     private List<Instruction> instructions = new ArrayList<>();
 
     private List<Ingredient> ingredients = new ArrayList<>();
@@ -54,5 +58,21 @@ public class Recipe {
 
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

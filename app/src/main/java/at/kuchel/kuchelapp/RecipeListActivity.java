@@ -140,7 +140,9 @@ public class RecipeListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
-            holder.mContentView.setText(mValues.get(position).getName());
+            holder.mNameView.setText(mValues.get(position).getName());
+            holder.mDurationView.setText(mValues.get(position).getDuration());
+            holder.mDifficultyView.setText(mValues.get(position).getDifficulty());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -153,12 +155,17 @@ public class RecipeListActivity extends AppCompatActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
-            final TextView mContentView;
+            final TextView mNameView;
+            final TextView mDurationView;
+            final TextView mDifficultyView;
+
 
             ViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mNameView = (TextView) view.findViewById(R.id.content_text);
+                mDurationView = (TextView) view.findViewById(R.id.duration_text);
+                mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
             }
         }
     }
