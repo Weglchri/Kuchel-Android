@@ -8,8 +8,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import at.kuchel.kuchelapp.model.Instruction;
-import at.kuchel.kuchelapp.model.Recipe;
+import at.kuchel.kuchelapp.model.InstructionEntity;
 
 /**
  * Created by bernhard on 19.03.2018.
@@ -18,16 +17,16 @@ import at.kuchel.kuchelapp.model.Recipe;
 @Dao
 public interface InstructionDao {
 
-    @Query("SELECT * FROM instruction")
-    List<Instruction> getAll();
+    @Query("SELECT * FROM InstructionEntity")
+    List<InstructionEntity> getAll();
 
     @Insert
-    void insertAll(List<Instruction> instruction);
+    void insertAll(List<InstructionEntity> instructionEntity);
 
     @Update
-    void update(Instruction instruction);
+    void update(InstructionEntity instructionEntity);
 
     @Delete
-    void delete(Instruction instruction);
+    void delete(InstructionEntity instructionEntity);
 }
 

@@ -1,30 +1,40 @@
-package at.kuchel.kuchelapp.api;
+package at.kuchel.kuchelapp.model;
+
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Relation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeResponse {
+@Entity
+public class RecipeEntity {
 
-    private Long id;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
+    @ColumnInfo(name = "apiId")
+    private Long apiId;
+
+    @ColumnInfo(name = "username")
     private String username;
 
+    @ColumnInfo(name = "name")
     private String name;
 
+    @ColumnInfo(name = "duration")
     private String duration;
 
+    @ColumnInfo(name = "difficulty")
     private String difficulty;
 
-    private List<InstructionResponse> instructions = new ArrayList<>();
-
-    private List<IngredientResponse> ingredients = new ArrayList<>();
-
-    public Long getId() {
-        return id;
+    public Long getApiId() {
+        return apiId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setApiId(Long apiId) {
+        this.apiId = apiId;
     }
 
     public String getUsername() {
@@ -43,23 +53,6 @@ public class RecipeResponse {
         this.name = name;
     }
 
-
-    public List<InstructionResponse> getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(List<InstructionResponse> instructions) {
-        this.instructions = instructions;
-    }
-
-    public List<IngredientResponse> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<IngredientResponse> ingredients) {
-        this.ingredients = ingredients;
-    }
-
     public String getDifficulty() {
         return difficulty;
     }
@@ -74,5 +67,13 @@ public class RecipeResponse {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

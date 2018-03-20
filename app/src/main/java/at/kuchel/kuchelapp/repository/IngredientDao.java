@@ -8,8 +8,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import at.kuchel.kuchelapp.model.Ingredient;
-import at.kuchel.kuchelapp.model.Instruction;
+import at.kuchel.kuchelapp.model.IngredientEntity;
 
 /**
  * Created by bernhard on 19.03.2018.
@@ -18,16 +17,16 @@ import at.kuchel.kuchelapp.model.Instruction;
 @Dao
 public interface IngredientDao {
 
-    @Query("SELECT * FROM ingredient")
-    List<Ingredient> getAll();
+    @Query("SELECT * FROM IngredientEntity")
+    List<IngredientEntity> getAll();
 
     @Insert
-    void insertAll(List<Ingredient> ingredient);
+    void insertAll(List<IngredientEntity> ingredientEntity);
 
     @Update
-    void update(Ingredient ingredient);
+    void update(IngredientEntity ingredientEntity);
 
     @Delete
-    void delete(Ingredient ingredient);
+    void delete(IngredientEntity ingredientEntity);
 }
 

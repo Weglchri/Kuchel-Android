@@ -3,17 +3,13 @@ package at.kuchel.kuchelapp.model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Relation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by bernhard on 12.03.2018.
  */
 
 @Entity
-public class Instruction {
+public class IngredientEntity {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -21,19 +17,17 @@ public class Instruction {
     @ColumnInfo(name = "recipe_id")
     private int recipeId;
 
-    @ColumnInfo(name = "step")
-    private String step;
-
     @ColumnInfo(name = "description")
     private String description;
 
-    public String getStep() {
-        return step;
-    }
+    @ColumnInfo(name = "name")
+    private String name;
 
-    public void setStep(String step) {
-        this.step = step;
-    }
+    @ColumnInfo(name = "quantity")
+    private String quantity;
+
+    @ColumnInfo(name = "qualifier")
+    private String qualifier;
 
     public String getDescription() {
         return description;
@@ -41,6 +35,30 @@ public class Instruction {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getQualifier() {
+        return qualifier;
+    }
+
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
     }
 
     public int getId() {

@@ -17,13 +17,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import at.kuchel.kuchelapp.api.RecipeResponse;
+import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
 import at.kuchel.kuchelapp.mapper.IngredientMapper;
 import at.kuchel.kuchelapp.mapper.InstructionMapper;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
-import at.kuchel.kuchelapp.model.Instruction;
-import at.kuchel.kuchelapp.model.Recipe;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,8 +45,8 @@ public class RecipeListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private List<RecipeResponse> recipes = new ArrayList<>();
-    private RecipeResponse recipe;
+    private List<Recipe> recipes = new ArrayList<>();
+    private Recipe recipe;
     private KuchelDatabase kuchel;
 
     @Override
@@ -85,13 +83,13 @@ public class RecipeListActivity extends AppCompatActivity {
         handleAsyncCallAndRedirect();
     }
 
-    //todo this is the code block to load all recipe overview
+    //todo this is the code block to load all recipeEntity overview
 //    private void handleAsyncCallAndRedirect() {
-//        Call<List<RecipeResponse>> call = RetrofitBuilder.createRecipeApi().getRecipes();
+//        Call<List<Recipe>> call = RetrofitBuilder.createRecipeApi().getRecipes();
 //
-//        call.enqueue(new Callback<List<RecipeResponse>>() {
+//        call.enqueue(new Callback<List<Recipe>>() {
 //            @Override
-//            public void onResponse(Call<List<RecipeResponse>> call, Response<List<RecipeResponse>> response) {
+//            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
 //                recipes = response.body();
 //                storeRecipe();
 //                View recyclerView = findViewById(R.id.recipe_list);
@@ -101,18 +99,18 @@ public class RecipeListActivity extends AppCompatActivity {
 //            }
 //
 //            @Override
-//            public void onFailure(Call<List<RecipeResponse>> call, Throwable t) {
+//            public void onFailure(Call<List<Recipe>> call, Throwable t) {
 //                // Log error here since request failed
 //            }
 //        });
 //    }
 
     private void handleAsyncCallAndRedirect() {
-        Call<RecipeResponse> call = RetrofitBuilder.createRecipeApi().getRecipe("3");
+        Call<Recipe> call = RetrofitBuilder.createRecipeApi().getRecipe("3");
 
-        call.enqueue(new Callback<RecipeResponse>() {
+        call.enqueue(new Callback<Recipe>() {
             @Override
-            public void onResponse(Call<RecipeResponse> call, Response<RecipeResponse> response) {
+            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
                 recipe = response.body();
                 recipes.add(recipe);
                 //todo next row allowed to store to db
@@ -124,7 +122,7 @@ public class RecipeListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RecipeResponse> call, Throwable t) {
+            public void onFailure(Call<Recipe> call, Throwable t) {
                 // Log error here since request failed
             }
         });
@@ -137,7 +135,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
                 kuchel.recipeDao().insertAll(RecipeMapper.map(recipes));
 
-                for (RecipeResponse recipe : recipes) {
+                for (Recipe recipe : recipes) {
                     kuchel.instructionDao().insertAll(InstructionMapper.map(recipe.getId(), recipe.getInstructions()));
                     //todo next row isn`t tested
                     kuchel.ingredientDao().insertAll(IngredientMapper.map(recipe.getId(), recipe.getIngredients()));
@@ -159,12 +157,12 @@ public class RecipeListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
-        private final List<RecipeResponse> recipes;
+        private final List<Recipe> recipes;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecipeResponse item = (RecipeResponse) view.getTag();
+                Recipe item = (Recipe) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
@@ -184,7 +182,7 @@ public class RecipeListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<RecipeResponse> recipes,
+                                      List<Recipe> recipes,
                                       boolean twoPane) {
             this.recipes = recipes;
             mParentActivity = parent;

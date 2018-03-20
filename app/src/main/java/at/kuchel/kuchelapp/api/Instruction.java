@@ -4,7 +4,7 @@ package at.kuchel.kuchelapp.api;
  * Created by bernhard on 12.03.2018.
  */
 
-public class InstructionResponse {
+public class Instruction {
 
     private String step;
     private String description;

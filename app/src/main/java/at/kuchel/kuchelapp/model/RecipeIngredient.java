@@ -12,8 +12,8 @@ import java.util.List;
 public class RecipeIngredient {
 
     @Embedded
-    public Recipe recipe;
+    public RecipeEntity recipeEntity;
     @Relation(parentColumn = "id", entityColumn = "recipe_id")
-    public List<Ingredient> ingredients;
+    public List<IngredientEntity> ingredientEntities;
 
 }
