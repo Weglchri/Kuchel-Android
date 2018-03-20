@@ -1,7 +1,9 @@
 package at.kuchel.kuchelapp;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,14 +12,19 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import at.kuchel.kuchelapp.api.RecipeResponse;
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
+import at.kuchel.kuchelapp.mapper.IngredientMapper;
+import at.kuchel.kuchelapp.mapper.InstructionMapper;
+import at.kuchel.kuchelapp.mapper.RecipeMapper;
+import at.kuchel.kuchelapp.model.Instruction;
 import at.kuchel.kuchelapp.model.Recipe;
+import at.kuchel.kuchelapp.repository.KuchelDatabase;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,12 +47,19 @@ public class RecipeListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<RecipeResponse> recipes = new ArrayList<>();
+    private RecipeResponse recipe;
+    private KuchelDatabase kuchel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
+
+        //todo store as singleton
+        kuchel = Room.databaseBuilder(getApplicationContext(), KuchelDatabase.class, "kuchel").build();
+        //todo need to delete database if changes where done or increase db version
+//        getApplicationContext().deleteDatabase("kuchel");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,13 +85,38 @@ public class RecipeListActivity extends AppCompatActivity {
         handleAsyncCallAndRedirect();
     }
 
-    private void handleAsyncCallAndRedirect(){
-        Call<List<Recipe>> call = RetrofitBuilder.createRecipeApi().getRecipes();
+    //todo this is the code block to load all recipe overview
+//    private void handleAsyncCallAndRedirect() {
+//        Call<List<RecipeResponse>> call = RetrofitBuilder.createRecipeApi().getRecipes();
+//
+//        call.enqueue(new Callback<List<RecipeResponse>>() {
+//            @Override
+//            public void onResponse(Call<List<RecipeResponse>> call, Response<List<RecipeResponse>> response) {
+//                recipes = response.body();
+//                storeRecipe();
+//                View recyclerView = findViewById(R.id.recipe_list);
+//                //todo not sure what the next row does
+//                assert recyclerView != null;
+//                setupRecyclerView((RecyclerView) recyclerView);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<RecipeResponse>> call, Throwable t) {
+//                // Log error here since request failed
+//            }
+//        });
+//    }
 
-        call.enqueue(new Callback<List<Recipe>>() {
+    private void handleAsyncCallAndRedirect() {
+        Call<RecipeResponse> call = RetrofitBuilder.createRecipeApi().getRecipe("3");
+
+        call.enqueue(new Callback<RecipeResponse>() {
             @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                recipes = response.body();
+            public void onResponse(Call<RecipeResponse> call, Response<RecipeResponse> response) {
+                recipe = response.body();
+                recipes.add(recipe);
+                //todo next row allowed to store to db
+//                storeRecipe();
                 View recyclerView = findViewById(R.id.recipe_list);
                 //todo not sure what the next row does
                 assert recyclerView != null;
@@ -85,10 +124,31 @@ public class RecipeListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+            public void onFailure(Call<RecipeResponse> call, Throwable t) {
                 // Log error here since request failed
             }
         });
+    }
+
+    private void storeRecipe() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                kuchel.recipeDao().insertAll(RecipeMapper.map(recipes));
+
+                for (RecipeResponse recipe : recipes) {
+                    kuchel.instructionDao().insertAll(InstructionMapper.map(recipe.getId(), recipe.getInstructions()));
+                    //todo next row isn`t tested
+                    kuchel.ingredientDao().insertAll(IngredientMapper.map(recipe.getId(), recipe.getIngredients()));
+                }
+//                kuchel.recipeDao().insertAll(RecipeMapper.map(recipes));
+                kuchel.instructionDao();
+                return null;
+            }
+
+        }.execute();
+
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -99,12 +159,12 @@ public class RecipeListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
-        private final List<Recipe> recipes;
+        private final List<RecipeResponse> recipes;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Recipe item = (Recipe) view.getTag();
+                RecipeResponse item = (RecipeResponse) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
@@ -124,7 +184,7 @@ public class RecipeListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<Recipe> recipes,
+                                      List<RecipeResponse> recipes,
                                       boolean twoPane) {
             this.recipes = recipes;
             mParentActivity = parent;

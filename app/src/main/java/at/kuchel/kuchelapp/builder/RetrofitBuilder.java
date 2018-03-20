@@ -1,7 +1,7 @@
 package at.kuchel.kuchelapp.builder;
 
 
-import at.kuchel.kuchelapp.api.RecipeApi;
+import at.kuchel.kuchelapp.controller.RecipeApi;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

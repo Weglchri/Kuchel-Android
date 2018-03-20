@@ -7,18 +7,17 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 
+import at.kuchel.kuchelapp.api.RecipeResponse;
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
 
-import at.kuchel.kuchelapp.model.Recipe;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * A fragment representing a single Recipe detail screen.
+ * A fragment representing a single RecipeResponse detail screen.
  * This fragment is either contained in a {@link RecipeListActivity}
  * in two-pane mode (on tablets) or a {@link RecipeDetailActivity}
  * on handsets.
@@ -34,7 +33,7 @@ public class RecipeDetailFragment extends Fragment {
      * The dummy content this fragment is presenting.
      */
 //    private DummyContent.RecipeItem mItem;
-    private Recipe recipe;
+    private RecipeResponse recipe;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -53,11 +52,11 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     private void handleAsyncCallAndRedirect(final FragmentActivity activity, String id) {
-        Call<Recipe> call = RetrofitBuilder.createRecipeApi().getRecipe(id);
+        Call<RecipeResponse> call = RetrofitBuilder.createRecipeApi().getRecipe(id);
 
-        call.enqueue(new Callback<Recipe>() {
+        call.enqueue(new Callback<RecipeResponse>() {
             @Override
-            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+            public void onResponse(Call<RecipeResponse> call, Response<RecipeResponse> response) {
                 recipe = response.body();
 
                 CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -67,7 +66,7 @@ public class RecipeDetailFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Recipe> call, Throwable t) {
+            public void onFailure(Call<RecipeResponse> call, Throwable t) {
                 // Log error here since request failed
             }
         });

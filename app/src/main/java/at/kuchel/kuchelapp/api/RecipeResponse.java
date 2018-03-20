@@ -1,40 +1,30 @@
-package at.kuchel.kuchelapp.model;
-
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Relation;
+package at.kuchel.kuchelapp.api;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class Recipe {
+public class RecipeResponse {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    private Long id;
 
-    @ColumnInfo(name = "apiId")
-    private Long apiId;
-
-    @ColumnInfo(name = "username")
     private String username;
 
-    @ColumnInfo(name = "name")
     private String name;
 
-    @ColumnInfo(name = "duration")
     private String duration;
 
-    @ColumnInfo(name = "difficulty")
     private String difficulty;
 
-    public Long getApiId() {
-        return apiId;
+    private List<InstructionResponse> instructions = new ArrayList<>();
+
+    private List<IngredientResponse> ingredients = new ArrayList<>();
+
+    public Long getId() {
+        return id;
     }
 
-    public void setApiId(Long apiId) {
-        this.apiId = apiId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -53,6 +43,23 @@ public class Recipe {
         this.name = name;
     }
 
+
+    public List<InstructionResponse> getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(List<InstructionResponse> instructions) {
+        this.instructions = instructions;
+    }
+
+    public List<IngredientResponse> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<IngredientResponse> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     public String getDifficulty() {
         return difficulty;
     }
@@ -67,13 +74,5 @@ public class Recipe {
 
     public void setDuration(String duration) {
         this.duration = duration;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
