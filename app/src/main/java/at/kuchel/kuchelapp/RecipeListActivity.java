@@ -19,8 +19,6 @@ import android.widget.TextView;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
-import at.kuchel.kuchelapp.mapper.IngredientMapper;
-import at.kuchel.kuchelapp.mapper.InstructionMapper;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
 import retrofit2.Call;
@@ -114,7 +112,7 @@ public class RecipeListActivity extends AppCompatActivity {
                 recipe = response.body();
                 recipes.add(recipe);
                 //todo next row allowed to store to db
-//                storeRecipe();
+                storeRecipe();
                 View recyclerView = findViewById(R.id.recipe_list);
                 //todo not sure what the next row does
                 assert recyclerView != null;
@@ -133,15 +131,9 @@ public class RecipeListActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
 
-                kuchel.recipeDao().insertAll(RecipeMapper.map(recipes));
+                kuchel.recipeDao().insertAll(RecipeMapper.mapToEntity(recipes));
 
-                for (Recipe recipe : recipes) {
-                    kuchel.instructionDao().insertAll(InstructionMapper.map(recipe.getId(), recipe.getInstructions()));
-                    //todo next row isn`t tested
-                    kuchel.ingredientDao().insertAll(IngredientMapper.map(recipe.getId(), recipe.getIngredients()));
-                }
-//                kuchel.recipeDao().insertAll(RecipeMapper.map(recipes));
-                kuchel.instructionDao();
+                kuchel.recipeDao().getRecipesWithInstructionsAndIngredients();
                 return null;
             }
 

@@ -13,7 +13,6 @@ public class RecipeIngredient {
 
     @Embedded
     public RecipeEntity recipeEntity;
-    @Relation(parentColumn = "id", entityColumn = "recipe_id")
+    @Relation(parentColumn = "api_id", entityColumn = "recipe_id", entity = IngredientEntity.class)
     public List<IngredientEntity> ingredientEntities;
-
 }

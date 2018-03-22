@@ -17,7 +17,6 @@ public class InstructionMapper {
         for (Instruction instruction : instructionRespons) {
             instructionEntities.add(map(recipeId, instruction));
         }
-
         return instructionEntities;
     }
 

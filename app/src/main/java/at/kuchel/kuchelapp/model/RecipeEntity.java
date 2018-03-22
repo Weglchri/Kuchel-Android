@@ -2,6 +2,7 @@ package at.kuchel.kuchelapp.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Relation;
 
@@ -14,7 +15,7 @@ public class RecipeEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @ColumnInfo(name = "apiId")
+    @ColumnInfo(name = "api_id")
     private Long apiId;
 
     @ColumnInfo(name = "username")
@@ -28,6 +29,12 @@ public class RecipeEntity {
 
     @ColumnInfo(name = "difficulty")
     private String difficulty;
+
+    @Ignore
+    private List<InstructionEntity> instructions;
+
+    @Ignore
+    private List<IngredientEntity> ingredients;
 
     public Long getApiId() {
         return apiId;
@@ -75,5 +82,21 @@ public class RecipeEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<InstructionEntity> getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(List<InstructionEntity> instructions) {
+        this.instructions = instructions;
+    }
+
+    public List<IngredientEntity> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<IngredientEntity> ingredients) {
+        this.ingredients = ingredients;
     }
 }

@@ -24,7 +24,7 @@ public class IngredientMapper {
         ingredientEntity.setDescription(ingredient.getDescription());
         ingredientEntity.setName(ingredient.getName());
         ingredientEntity.setQualifier(ingredient.getQualifier());
-        ingredientEntity.setQuantity(ingredient.getQualifier());
+        ingredientEntity.setQuantity(ingredient.getQuantity());
         ingredientEntity.setRecipeId(Integer.parseInt(String.valueOf(recipeId)));
         return ingredientEntity;
     }

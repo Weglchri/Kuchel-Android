@@ -12,22 +12,26 @@ import at.kuchel.kuchelapp.model.RecipeEntity;
 
 public class RecipeMapper {
 
-    public static List<RecipeEntity> map(List<Recipe> recipes) {
-        List<RecipeEntity> recipesDb = new ArrayList<>();
+    public static List<RecipeEntity> mapToEntity(List<Recipe> recipes) {
+        List<RecipeEntity> recipeEntities = new ArrayList<>();
         for (Recipe recipe : recipes) {
-            recipesDb.add(map(recipe));
+            recipeEntities.add(mapToEntity(recipe));
+
         }
-        return recipesDb;
+        return recipeEntities;
     }
 
-    public static RecipeEntity map(Recipe recipe) {
+    public static RecipeEntity mapToEntity(Recipe recipe) {
 
-        RecipeEntity recipeEntityDb = new RecipeEntity();
-        recipeEntityDb.setDifficulty(recipe.getDifficulty());
-        recipeEntityDb.setApiId(recipe.getId());
-        recipeEntityDb.setName(recipe.getName());
-        recipeEntityDb.setUsername(recipe.getUsername());
+        RecipeEntity recipeEntity = new RecipeEntity();
+        recipeEntity.setDifficulty(recipe.getDifficulty());
+        recipeEntity.setApiId(recipe.getId());
+        recipeEntity.setName(recipe.getName());
+        recipeEntity.setUsername(recipe.getUsername());
 
-        return recipeEntityDb;
+        recipeEntity.setInstructions(InstructionMapper.map(recipe.getId(), recipe.getInstructions()));
+        recipeEntity.setIngredients(IngredientMapper.map(recipe.getId(), recipe.getIngredients()));
+
+        return recipeEntity;
     }
 }
