@@ -15,6 +15,6 @@ public class RecipeInstruction {
 
     @Embedded
     public RecipeEntity recipeEntity;
-    @Relation(parentColumn = "api_id", entityColumn = "recipe_id", entity = InstructionEntity.class)
+    @Relation(parentColumn = "id", entityColumn = "recipe_id", entity = InstructionEntity.class)
     public List<InstructionEntity> instructionEntities;
 }

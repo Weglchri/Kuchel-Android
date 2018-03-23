@@ -58,4 +58,26 @@ public class InstructionEntity {
     public void setRecipeId(int recipeId) {
         this.recipeId = recipeId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InstructionEntity that = (InstructionEntity) o;
+
+        if (id != that.id) return false;
+        if (recipeId != that.recipeId) return false;
+        if (step != null ? !step.equals(that.step) : that.step != null) return false;
+        return description != null ? description.equals(that.description) : that.description == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + recipeId;
+        result = 31 * result + (step != null ? step.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
+    }
 }

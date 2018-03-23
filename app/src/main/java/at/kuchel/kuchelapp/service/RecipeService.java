@@ -3,6 +3,7 @@ package at.kuchel.kuchelapp.service;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,8 @@ public class RecipeService {
                         mustCreate.add(recipe);
                     } else if (recipe.getModifiedDate().after(database.recipeDao().findById(String.valueOf(recipe.getId())).getModifiedDate())) {
                         mustUpdate.add(recipe);
+                    } else {
+                        Log.i("no_update", "no update needed");
                     }
                 }
                 storeRecipes(mustCreate, database);

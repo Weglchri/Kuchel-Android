@@ -78,7 +78,6 @@ public class RecipeListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-//
 
 
         if (!loadFromDbWithoutRest) {      //check if internet is ok and speed good

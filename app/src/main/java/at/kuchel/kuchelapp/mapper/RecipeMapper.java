@@ -31,12 +31,13 @@ public class RecipeMapper {
     private static Recipe mapToEntity(RecipeEntity recipeEntity) {
         Recipe recipe = new Recipe();
         recipe.setDifficulty(recipeEntity.getDifficulty());
-        recipe.setId(recipeEntity.getApiId());
+        recipe.setId(recipeEntity.getId());
         recipe.setName(recipeEntity.getName());
         recipe.setUsername(recipeEntity.getUsername());
         recipe.setModifiedDate(recipeEntity.getModifiedDate());
+        recipe.setDuration(recipeEntity.getDuration());
 
-        recipe.setInstructions(InstructionMapper.mapToApi(recipeEntity.getApiId(), recipeEntity.getInstructions()));
+        recipe.setInstructions(InstructionMapper.mapToApi(recipeEntity.getId(), recipeEntity.getInstructions()));
         recipe.setIngredients(IngredientMapper.mapToApi(recipe.getId(), recipeEntity.getIngredients()));
 
         return recipe;
@@ -46,10 +47,11 @@ public class RecipeMapper {
 
         RecipeEntity recipeEntity = new RecipeEntity();
         recipeEntity.setDifficulty(recipe.getDifficulty());
-        recipeEntity.setApiId(recipe.getId());
+        recipeEntity.setId(recipe.getId());
         recipeEntity.setName(recipe.getName());
         recipeEntity.setUsername(recipe.getUsername());
         recipeEntity.setModifiedDate(recipe.getModifiedDate());
+        recipeEntity.setDuration(recipe.getDuration());
 
         recipeEntity.setInstructions(InstructionMapper.mapToEntity(recipe.getId(), recipe.getInstructions()));
         recipeEntity.setIngredients(IngredientMapper.mapToEntity(recipe.getId(), recipe.getIngredients()));

@@ -4,11 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Relation;
 import android.arch.persistence.room.TypeConverters;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,11 +14,9 @@ import at.kuchel.kuchelapp.converter.DateConverter;
 @Entity
 public class RecipeEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    @ColumnInfo(name = "api_id")
-    private Long apiId;
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    private Long id;
 
     @ColumnInfo(name = "username")
     private String username;
@@ -45,13 +40,6 @@ public class RecipeEntity {
     @Ignore
     private List<IngredientEntity> ingredients;
 
-    public Long getApiId() {
-        return apiId;
-    }
-
-    public void setApiId(Long apiId) {
-        this.apiId = apiId;
-    }
 
     public String getUsername() {
         return username;
@@ -85,14 +73,6 @@ public class RecipeEntity {
         this.duration = duration;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public List<InstructionEntity> getInstructions() {
         return instructions;
     }
@@ -115,5 +95,13 @@ public class RecipeEntity {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

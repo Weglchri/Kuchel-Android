@@ -36,23 +36,25 @@ public abstract class RecipeDao {
     }
 
     public void updateAll(List<RecipeEntity> recipes) {
-
-        //todo refactore that only changes must be updated
         for (RecipeEntity recipe : recipes) {
-            if (recipe.getInstructions() != null) {
-                insertInstructionsForRecipe(recipe, recipe.getInstructions());
+            RecipeInstruction recipeInstruction = findRecipeInstructionByRecipeId(String.valueOf(recipe.getId()));
+            for (InstructionEntity oldInstructionEntity : recipeInstruction.instructionEntities) {
+                delete(oldInstructionEntity);
             }
-            if (recipe.getIngredients() != null) {
-                insertIngredientsForRecipe(recipe, recipe.getIngredients());
+
+            RecipeIngredient recipeIngredients = findRecipeIngredientByRecipeId(String.valueOf(recipe.getId()));
+            for (IngredientEntity oldIngredientEntity : recipeIngredients.ingredientEntities) {
+                delete(oldIngredientEntity);
             }
+            delete(recipe);
         }
-        _insertAll(recipes);
+        insertAll(recipes);
     }
 
     private void insertIngredientsForRecipe(RecipeEntity recipeEntity, List<IngredientEntity> instructionEntities) {
 
         for (IngredientEntity ingredientEntity : instructionEntities) {
-            ingredientEntity.setRecipeId(Integer.parseInt(recipeEntity.getApiId().toString()));
+            ingredientEntity.setRecipeId(Integer.parseInt(recipeEntity.getId().toString()));
         }
         _insertIngredients(instructionEntities);
     }
@@ -60,7 +62,7 @@ public abstract class RecipeDao {
     private void insertInstructionsForRecipe(RecipeEntity recipeEntity, List<InstructionEntity> instructionEntities) {
 
         for (InstructionEntity instructionEntity : instructionEntities) {
-            instructionEntity.setRecipeId(Integer.parseInt(recipeEntity.getApiId().toString()));
+            instructionEntity.setRecipeId(Integer.parseInt(recipeEntity.getId().toString()));
         }
         _insertInstructions(instructionEntities);
     }
@@ -72,7 +74,7 @@ public abstract class RecipeDao {
         for (RecipeInstruction recipeInstruction : recipeInstructions) {
             recipeInstruction.recipeEntity.setInstructions(recipeInstruction.instructionEntities);
             for (RecipeIngredient recipeIngredient : recipeIngredients) {
-                if (Objects.equals(recipeInstruction.recipeEntity.getApiId(), recipeIngredient.recipeEntity.getApiId())) {
+                if (Objects.equals(recipeInstruction.recipeEntity.getId(), recipeIngredient.recipeEntity.getId())) {
                     recipeInstruction.recipeEntity.setIngredients(recipeIngredient.ingredientEntities);
                 }
             }
@@ -91,10 +93,16 @@ public abstract class RecipeDao {
     @Query("SELECT * FROM RecipeEntity WHERE name LIKE :name LIMIT 1")
     abstract RecipeEntity findByName(String name);
 
-    @Query("SELECT * FROM RecipeEntity WHERE api_id = :apiId ")
-    public abstract RecipeEntity findById(String apiId);
+    @Query("SELECT * FROM RecipeEntity WHERE id = :id ")
+    public abstract RecipeEntity findById(String id);
 
-    @Query("SELECT api_id FROM RecipeEntity")
+    @Query("SELECT * FROM RecipeEntity WHERE id = :id ")
+    public abstract RecipeInstruction findRecipeInstructionByRecipeId(String id);
+
+    @Query("SELECT * FROM RecipeEntity WHERE id = :id ")
+    public abstract RecipeIngredient findRecipeIngredientByRecipeId(String id);
+
+    @Query("SELECT id FROM RecipeEntity")
     public abstract List<Long> getApiIds();
 
     @Insert
@@ -107,9 +115,24 @@ public abstract class RecipeDao {
     abstract void _insertAll(List<RecipeEntity> recipeEntities);
 
     @Update
+    abstract void _updateAll(List<RecipeEntity> recipeEntities);
+
+    @Update
     abstract void update(RecipeEntity recipeEntity);
+
+    @Update
+    abstract void update(InstructionEntity instructionEntity);
+
+    @Update
+    abstract void update(IngredientEntity ingredientEntity);
 
     @Delete
     abstract void delete(RecipeEntity recipeEntity);
+
+    @Delete
+    abstract void delete(InstructionEntity instructionEntity);
+
+    @Delete
+    abstract void delete(IngredientEntity ingredientEntity);
 }
 
