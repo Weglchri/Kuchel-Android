@@ -23,7 +23,7 @@ public class RecipeService {
     private DatabaseManager databaseManager;
 
     @SuppressLint("StaticFieldLeak")
-    public void storeNewAndUpdateExistingRecipes(final List<Recipe> recipes, final KuchelDatabase database) {
+    void storeNewAndUpdateExistingRecipes(final List<Recipe> recipes, final KuchelDatabase database) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -50,6 +50,24 @@ public class RecipeService {
     }
 
     @SuppressLint("StaticFieldLeak")
+    void retrieveRecipes(final KuchelDatabase database, final RecipeListActivity recipeListActivity) {
+        new AsyncTask<Void, Void, Void>() {
+            private List<Recipe> recipes = new ArrayList<>();
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                recipes.addAll(RecipeMapper.mapToApi(database.recipeDao().getRecipesWithInstructionsAndIngredients()));
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                recipeListActivity.handleReturnFromDb(recipes);
+            }
+        }.execute();
+    }
+
+    @SuppressLint("StaticFieldLeak")
     private void storeRecipes(final List<Recipe> recipes, final KuchelDatabase database) {
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -69,24 +87,6 @@ public class RecipeService {
                 return null;
             }
 
-        }.execute();
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    public void retrieveRecipes(final KuchelDatabase database, final RecipeListActivity recipeListActivity) {
-        new AsyncTask<Void, Void, Void>() {
-            private List<Recipe> recipes = new ArrayList<>();
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                recipes.addAll(RecipeMapper.mapToApi(database.recipeDao().getRecipesWithInstructionsAndIngredients()));
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                recipeListActivity.handleReturnFromDb(recipes);
-            }
         }.execute();
     }
 }

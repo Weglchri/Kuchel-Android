@@ -1,9 +1,7 @@
 package at.kuchel.kuchelapp;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +18,6 @@ import android.widget.TextView;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
-import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
 import at.kuchel.kuchelapp.service.DatabaseManager;
 import retrofit2.Call;
@@ -29,7 +26,6 @@ import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -47,7 +43,7 @@ public class RecipeListActivity extends AppCompatActivity {
     private Recipe recipe;
     private KuchelDatabase kuchel;
     private DatabaseManager databaseManager = new DatabaseManager();
-    private boolean loadFromDbWithoutRest = false;
+    private boolean loadOnlyFromDb = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +75,7 @@ public class RecipeListActivity extends AppCompatActivity {
         }
 
 
-
-        if (!loadFromDbWithoutRest) {      //check if internet is ok and speed good
+        if (!loadOnlyFromDb) {      //check if internet is ok and speed good
             handleAsyncCallAndRedirect();
         } else {
             databaseManager.loadRecipes(getApplicationContext(), this);
@@ -88,15 +83,14 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     private void handleAsyncCallAndRedirect() {
-        Call<Recipe> call = RetrofitBuilder.createRecipeApi().getRecipe("3");
+        Call<List<Recipe>> call = RetrofitBuilder.createRecipeApi().getRecipes();
 
-        call.enqueue(new Callback<Recipe>() {
+        call.enqueue(new Callback<List<Recipe>>() {
             @Override
-            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
-                recipe = response.body();
-                recipes.add(recipe);
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                recipes = response.body();
                 //todo next row allowed to store to db
-                databaseManager.storeAndUpdateRecipes(recipes,getApplicationContext());
+                databaseManager.storeAndUpdateRecipes(recipes, getApplicationContext());
 
                 View recyclerView = findViewById(R.id.recipe_list);
                 //todo not sure what the next row does
@@ -105,7 +99,7 @@ public class RecipeListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Recipe> call, Throwable t) {
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 // Log error here since request failed
             }
         });
