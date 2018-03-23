@@ -34,6 +34,7 @@ public class RecipeMapper {
         recipe.setId(recipeEntity.getApiId());
         recipe.setName(recipeEntity.getName());
         recipe.setUsername(recipeEntity.getUsername());
+        recipe.setModifiedDate(recipeEntity.getModifiedDate());
 
         recipe.setInstructions(InstructionMapper.mapToApi(recipeEntity.getApiId(), recipeEntity.getInstructions()));
         recipe.setIngredients(IngredientMapper.mapToApi(recipe.getId(), recipeEntity.getIngredients()));
@@ -48,6 +49,7 @@ public class RecipeMapper {
         recipeEntity.setApiId(recipe.getId());
         recipeEntity.setName(recipe.getName());
         recipeEntity.setUsername(recipe.getUsername());
+        recipeEntity.setModifiedDate(recipe.getModifiedDate());
 
         recipeEntity.setInstructions(InstructionMapper.mapToEntity(recipe.getId(), recipe.getInstructions()));
         recipeEntity.setIngredients(IngredientMapper.mapToEntity(recipe.getId(), recipe.getIngredients()));

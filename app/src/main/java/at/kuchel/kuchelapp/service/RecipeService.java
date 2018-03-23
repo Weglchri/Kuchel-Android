@@ -23,7 +23,6 @@ public class RecipeService {
 
     @SuppressLint("StaticFieldLeak")
     public void storeNewAndUpdateExistingRecipes(final List<Recipe> recipes, final KuchelDatabase database) {
-
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
