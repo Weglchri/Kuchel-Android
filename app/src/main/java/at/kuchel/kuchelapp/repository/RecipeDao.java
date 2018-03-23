@@ -35,6 +35,20 @@ public abstract class RecipeDao {
         _insertAll(recipes);
     }
 
+    public void updateAll(List<RecipeEntity> recipes) {
+
+        //todo refactore that only changes must be updated
+        for (RecipeEntity recipe : recipes) {
+            if (recipe.getInstructions() != null) {
+                insertInstructionsForRecipe(recipe, recipe.getInstructions());
+            }
+            if (recipe.getIngredients() != null) {
+                insertIngredientsForRecipe(recipe, recipe.getIngredients());
+            }
+        }
+        _insertAll(recipes);
+    }
+
     private void insertIngredientsForRecipe(RecipeEntity recipeEntity, List<IngredientEntity> instructionEntities) {
 
         for (IngredientEntity ingredientEntity : instructionEntities) {
@@ -58,7 +72,7 @@ public abstract class RecipeDao {
         for (RecipeInstruction recipeInstruction : recipeInstructions) {
             recipeInstruction.recipeEntity.setInstructions(recipeInstruction.instructionEntities);
             for (RecipeIngredient recipeIngredient : recipeIngredients) {
-                if (Objects.equals(recipeIngredient.recipeEntity.getApiId(), recipeIngredient.recipeEntity.getApiId())) {
+                if (Objects.equals(recipeInstruction.recipeEntity.getApiId(), recipeIngredient.recipeEntity.getApiId())) {
                     recipeInstruction.recipeEntity.setIngredients(recipeIngredient.ingredientEntities);
                 }
             }
@@ -76,6 +90,12 @@ public abstract class RecipeDao {
 
     @Query("SELECT * FROM RecipeEntity WHERE name LIKE :name LIMIT 1")
     abstract RecipeEntity findByName(String name);
+
+    @Query("SELECT * FROM RecipeEntity WHERE api_id = :apiId ")
+    public abstract RecipeEntity findById(String apiId);
+
+    @Query("SELECT api_id FROM RecipeEntity")
+    public abstract List<Long> getApiIds();
 
     @Insert
     abstract void _insertInstructions(List<InstructionEntity> instructionEntities);

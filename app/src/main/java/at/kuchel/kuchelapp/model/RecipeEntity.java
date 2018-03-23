@@ -5,9 +5,14 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Relation;
+import android.arch.persistence.room.TypeConverters;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import at.kuchel.kuchelapp.converter.DateConverter;
 
 @Entity
 public class RecipeEntity {
@@ -29,6 +34,10 @@ public class RecipeEntity {
 
     @ColumnInfo(name = "difficulty")
     private String difficulty;
+
+    @ColumnInfo(name = "modified_date")
+    @TypeConverters(DateConverter.class)
+    private Date modifiedDate;
 
     @Ignore
     private List<InstructionEntity> instructions;
@@ -98,5 +107,13 @@ public class RecipeEntity {
 
     public void setIngredients(List<IngredientEntity> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

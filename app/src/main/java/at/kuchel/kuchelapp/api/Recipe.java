@@ -1,6 +1,7 @@
 package at.kuchel.kuchelapp.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Recipe {
@@ -14,6 +15,8 @@ public class Recipe {
     private String duration;
 
     private String difficulty;
+
+    private Date modifiedDate;
 
     private List<Instruction> instructions = new ArrayList<>();
 
@@ -74,5 +77,13 @@ public class Recipe {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

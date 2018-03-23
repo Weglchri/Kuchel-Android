@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,14 @@ import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
+import at.kuchel.kuchelapp.service.DatabaseManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -38,23 +41,20 @@ import java.util.List;
  */
 public class RecipeListActivity extends AppCompatActivity {
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
+    private static RecipeListActivity mInstance;
     private boolean mTwoPane;
     private List<Recipe> recipes = new ArrayList<>();
     private Recipe recipe;
     private KuchelDatabase kuchel;
+    private DatabaseManager databaseManager = new DatabaseManager();
+    private boolean loadFromDbWithoutRest = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
-        //todo store as singleton
-        kuchel = Room.databaseBuilder(getApplicationContext(), KuchelDatabase.class, "kuchel").build();
-        //todo need to delete database if changes where done or increase db version
+        //todo use if db has to be resetted
 //        getApplicationContext().deleteDatabase("kuchel");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -78,30 +78,15 @@ public class RecipeListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        handleAsyncCallAndRedirect();
-    }
+//
 
-    //todo this is the code block to load all recipeEntity overview
-//    private void handleAsyncCallAndRedirect() {
-//        Call<List<Recipe>> call = RetrofitBuilder.createRecipeApi().getRecipes();
-//
-//        call.enqueue(new Callback<List<Recipe>>() {
-//            @Override
-//            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-//                recipes = response.body();
-//                storeRecipe();
-//                View recyclerView = findViewById(R.id.recipe_list);
-//                //todo not sure what the next row does
-//                assert recyclerView != null;
-//                setupRecyclerView((RecyclerView) recyclerView);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-//                // Log error here since request failed
-//            }
-//        });
-//    }
+
+        if (!loadFromDbWithoutRest) {      //check if internet is ok and speed good
+            handleAsyncCallAndRedirect();
+        } else {
+            databaseManager.loadRecipes(getApplicationContext(), this);
+        }
+    }
 
     private void handleAsyncCallAndRedirect() {
         Call<Recipe> call = RetrofitBuilder.createRecipeApi().getRecipe("3");
@@ -112,7 +97,8 @@ public class RecipeListActivity extends AppCompatActivity {
                 recipe = response.body();
                 recipes.add(recipe);
                 //todo next row allowed to store to db
-                storeRecipe();
+                databaseManager.storeAndUpdateRecipes(recipes,getApplicationContext());
+
                 View recyclerView = findViewById(R.id.recipe_list);
                 //todo not sure what the next row does
                 assert recyclerView != null;
@@ -126,19 +112,16 @@ public class RecipeListActivity extends AppCompatActivity {
         });
     }
 
-    private void storeRecipe() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
+    public void handleReturnFromDb(List<Recipe> recipesFromDb) {
+        if (recipesFromDb.size() == 0) {
+            Log.d("error.error", "handleReturnFromDb with size 0");
+        }
 
-                kuchel.recipeDao().insertAll(RecipeMapper.mapToEntity(recipes));
-
-                kuchel.recipeDao().getRecipesWithInstructionsAndIngredients();
-                return null;
-            }
-
-        }.execute();
-
+        recipes.addAll(recipesFromDb);
+        View recyclerView = findViewById(R.id.recipe_list);
+        //todo not sure what the next row does
+        assert recyclerView != null;
+        setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {

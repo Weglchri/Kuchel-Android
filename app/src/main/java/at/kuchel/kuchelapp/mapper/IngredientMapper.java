@@ -11,15 +11,16 @@ import at.kuchel.kuchelapp.model.IngredientEntity;
  */
 
 public class IngredientMapper {
-    public static List<IngredientEntity> map(Long recipeId, List<Ingredient> ingredientsResponse) {
+
+    public static List<IngredientEntity> mapToEntity(Long recipeId, List<Ingredient> ingredientsResponse) {
         List<IngredientEntity> ingredientEntities = new ArrayList<>();
         for (Ingredient ingredient : ingredientsResponse) {
-            ingredientEntities.add(map(recipeId, ingredient));
+            ingredientEntities.add(mapToEntity(recipeId, ingredient));
         }
         return ingredientEntities;
     }
 
-    private static IngredientEntity map(Long recipeId, Ingredient ingredient) {
+    private static IngredientEntity mapToEntity(Long recipeId, Ingredient ingredient) {
         IngredientEntity ingredientEntity = new IngredientEntity();
         ingredientEntity.setDescription(ingredient.getDescription());
         ingredientEntity.setName(ingredient.getName());
@@ -27,5 +28,22 @@ public class IngredientMapper {
         ingredientEntity.setQuantity(ingredient.getQuantity());
         ingredientEntity.setRecipeId(Integer.parseInt(String.valueOf(recipeId)));
         return ingredientEntity;
+    }
+
+    public static List<Ingredient> mapToApi(Long id, List<IngredientEntity> ingredientEntities) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        for (IngredientEntity ingredientEntity : ingredientEntities) {
+            ingredients.add(mapToApi(id, ingredientEntity));
+        }
+        return ingredients;
+    }
+
+    private static Ingredient mapToApi(Long recipeId, IngredientEntity ingredientEntity) {
+        Ingredient ingredient = new Ingredient();
+        ingredient.setDescription(ingredientEntity.getDescription());
+        ingredient.setName(ingredientEntity.getName());
+        ingredient.setQualifier(ingredientEntity.getQualifier());
+        ingredient.setQuantity(ingredientEntity.getQuantity());
+        return ingredient;
     }
 }
