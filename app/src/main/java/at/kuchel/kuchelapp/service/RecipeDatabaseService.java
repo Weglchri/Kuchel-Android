@@ -1,7 +1,6 @@
 package at.kuchel.kuchelapp.service;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,29 +10,32 @@ import java.util.List;
 import at.kuchel.kuchelapp.RecipeListActivity;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
-import at.kuchel.kuchelapp.model.RecipeEntity;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
 
 /**
  * Created by bernhard on 23.03.2018.
  */
 
-public class RecipeService {
+public class RecipeDatabaseService {
 
-    private DatabaseManager databaseManager;
+    private RecipeListActivity recipeListActivity;
+
+    public RecipeDatabaseService(RecipeListActivity recipeListActivity) {
+        this.recipeListActivity = recipeListActivity;
+    }
 
     @SuppressLint("StaticFieldLeak")
-    void storeNewAndUpdateExistingRecipes(final List<Recipe> recipes, final KuchelDatabase database) {
+    public void storeNewAndUpdateExistingRecipes(final List<Recipe> recipes, final KuchelDatabase database) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 final List<Recipe> mustUpdate = new ArrayList<>();
                 final List<Recipe> mustCreate = new ArrayList<>();
 
-                List<Long> apiIds = database.recipeDao().getApiIds();
+                List<Long> recipeIds = database.recipeDao().getApiIds();
 
                 for (Recipe recipe : recipes) {
-                    if (!apiIds.contains(recipe.getId())) {
+                    if (!recipeIds.contains(recipe.getId())) {
                         mustCreate.add(recipe);
                     } else if (recipe.getModifiedDate().after(database.recipeDao().findById(String.valueOf(recipe.getId())).getModifiedDate())) {
                         mustUpdate.add(recipe);
@@ -50,7 +52,7 @@ public class RecipeService {
     }
 
     @SuppressLint("StaticFieldLeak")
-    void retrieveRecipes(final KuchelDatabase database, final RecipeListActivity recipeListActivity) {
+    public void retrieveRecipes(final KuchelDatabase database) {
         new AsyncTask<Void, Void, Void>() {
             private List<Recipe> recipes = new ArrayList<>();
 
@@ -62,7 +64,7 @@ public class RecipeService {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                recipeListActivity.handleReturnFromDb(recipes);
+                recipeListActivity.retrievedRecipesFromDatabase(recipes);
             }
         }.execute();
     }

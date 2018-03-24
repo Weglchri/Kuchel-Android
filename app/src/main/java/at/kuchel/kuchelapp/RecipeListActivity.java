@@ -1,5 +1,6 @@
 package at.kuchel.kuchelapp;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,12 +18,9 @@ import android.widget.TextView;
 
 
 import at.kuchel.kuchelapp.api.Recipe;
-import at.kuchel.kuchelapp.builder.RetrofitBuilder;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
-import at.kuchel.kuchelapp.service.DatabaseManager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import at.kuchel.kuchelapp.service.RecipeDatabaseService;
+import at.kuchel.kuchelapp.service.RecipeRestService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +38,19 @@ public class RecipeListActivity extends AppCompatActivity {
     private static RecipeListActivity mInstance;
     private boolean mTwoPane;
     private List<Recipe> recipes = new ArrayList<>();
-    private Recipe recipe;
-    private KuchelDatabase kuchel;
-    private DatabaseManager databaseManager = new DatabaseManager();
-    private boolean loadOnlyFromDb = false;
+    private boolean loadOnlyFromDb = true;
+
+    public static final String KUCHEL = "kuchel";
+    private RecipeDatabaseService recipeDatabaseService = new RecipeDatabaseService(this);
+    private RecipeRestService recipeRestService = new RecipeRestService(this);
+    private KuchelDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
+        createDatabase();
         //todo use if db has to be resetted
 //        getApplicationContext().deleteDatabase("kuchel");
 
@@ -74,45 +75,27 @@ public class RecipeListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-
-        if (!loadOnlyFromDb) {      //check if internet is ok and speed good
-            handleAsyncCallAndRedirect();
+        if (!loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
+            recipeRestService.retrieveRecipes();
         } else {
-            databaseManager.loadRecipes(getApplicationContext(), this);
+            recipeDatabaseService.retrieveRecipes(database);
         }
     }
 
-    private void handleAsyncCallAndRedirect() {
-        Call<List<Recipe>> call = RetrofitBuilder.createRecipeApi().getRecipes();
+    public void retrievedRecipesFromRest(List<Recipe> recipes) {
+        this.recipes = recipes;
+        recipeDatabaseService.storeNewAndUpdateExistingRecipes(recipes, database);
 
-        call.enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                recipes = response.body();
-                //todo next row allowed to store to db
-                databaseManager.storeAndUpdateRecipes(recipes, getApplicationContext());
-
-                View recyclerView = findViewById(R.id.recipe_list);
-                //todo not sure what the next row does
-                assert recyclerView != null;
-                setupRecyclerView((RecyclerView) recyclerView);
-            }
-
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                // Log error here since request failed
-            }
-        });
+        showRecipesInOverview();
     }
 
-    public void handleReturnFromDb(List<Recipe> recipesFromDb) {
-        if (recipesFromDb.size() == 0) {
-            Log.d("error.error", "handleReturnFromDb with size 0");
-        }
+    public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {
+        recipes = recipesFromDb;
+        showRecipesInOverview();
+    }
 
-        recipes.addAll(recipesFromDb);
+    private void showRecipesInOverview(){
         View recyclerView = findViewById(R.id.recipe_list);
-        //todo not sure what the next row does
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
@@ -125,6 +108,7 @@ public class RecipeListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
+
         private final List<Recipe> recipes;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -181,11 +165,11 @@ public class RecipeListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
+
             final TextView mIdView;
             final TextView mNameView;
             final TextView mDurationView;
             final TextView mDifficultyView;
-
 
             ViewHolder(View view) {
                 super(view);
@@ -195,5 +179,9 @@ public class RecipeListActivity extends AppCompatActivity {
                 mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
             }
         }
+    }
+
+    private void createDatabase() {
+        database = Room.databaseBuilder(getApplicationContext(), KuchelDatabase.class, KUCHEL).build();
     }
 }

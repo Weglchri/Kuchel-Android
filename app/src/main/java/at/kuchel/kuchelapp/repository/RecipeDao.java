@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public abstract class RecipeDao {
         _insertAll(recipes);
     }
 
+    @Transaction
     public void updateAll(List<RecipeEntity> recipes) {
         for (RecipeEntity recipe : recipes) {
             RecipeInstruction recipeInstruction = findRecipeInstructionByRecipeId(String.valueOf(recipe.getId()));
