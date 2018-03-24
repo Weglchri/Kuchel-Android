@@ -38,7 +38,7 @@ public class RecipeListActivity extends AppCompatActivity {
     private static RecipeListActivity mInstance;
     private boolean mTwoPane;
     private List<Recipe> recipes = new ArrayList<>();
-    private boolean loadOnlyFromDb = true;
+    private boolean loadOnlyFromDb = false;
 
     public static final String KUCHEL = "kuchel";
     private RecipeDatabaseService recipeDatabaseService = new RecipeDatabaseService(this);
@@ -84,9 +84,8 @@ public class RecipeListActivity extends AppCompatActivity {
 
     public void retrievedRecipesFromRest(List<Recipe> recipes) {
         this.recipes = recipes;
-        recipeDatabaseService.storeNewAndUpdateExistingRecipes(recipes, database);
-
         showRecipesInOverview();
+        recipeDatabaseService.storeNewAndUpdateExistingRecipes(recipes, database);
     }
 
     public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {
