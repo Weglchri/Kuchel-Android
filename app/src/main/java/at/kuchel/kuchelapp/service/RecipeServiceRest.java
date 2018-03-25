@@ -77,13 +77,13 @@ public class RecipeServiceRest {
                     opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
                     byte[] imageByteArray = image.getData();
                     Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
+                    if (bitmap != null) {
 
-                    // 2. store bitmap as file to storage
-                    fileService.saveToInternalStorage(bitmap, image.getId());
+                        // 2. store bitmap as file to storage
+                        fileService.saveToInternalStorage(bitmap, image.getId());
 
-//                    //test of read
-//                    fileService.loadImageFromStorage(image.getId());
-
+                        recipeListActivity.retrievedImageBitmapsFromDatabase(bitmap);
+                    }
                 }
             }
 

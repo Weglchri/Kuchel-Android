@@ -3,6 +3,7 @@ package at.kuchel.kuchelapp;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
@@ -43,6 +45,7 @@ public class RecipeListActivity extends AppCompatActivity {
     private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
     private RecipeServiceRest recipeServiceRest = new RecipeServiceRest(this);
     private KuchelDatabase database;
+    private List<Bitmap> images = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,12 @@ public class RecipeListActivity extends AppCompatActivity {
     public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {
         recipes = recipesFromDb;
         showRecipesInOverview();
+    }
+
+    public void retrievedImageBitmapsFromDatabase(Bitmap bitmap) {
+        this.images.add(bitmap);
+//        todo method to show images needed - refresh
+//        showImagesInOverview();
     }
 
     private void showRecipesInOverview(){

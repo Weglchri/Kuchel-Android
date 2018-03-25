@@ -19,8 +19,8 @@ import at.kuchel.kuchelapp.RecipeListActivity;
 
 public class FileService {
 
-    public static final String IMAGES = "images";
-    public static final String JPG = ".jpg";
+    private static final String IMAGES = "images";
+    private static final String JPG = ".jpg";
     private static final String IMAGE = "image";
     private final RecipeListActivity recipeListActivity;
 
@@ -28,7 +28,7 @@ public class FileService {
         this.recipeListActivity = recipeListActivity;
     }
 
-    public String saveToInternalStorage(Bitmap bitmapImage, String imageId) {
+    void saveToInternalStorage(Bitmap bitmapImage, String imageId) {
         ContextWrapper cw = new ContextWrapper(recipeListActivity.getApplicationContext());
         File directory = cw.getDir(IMAGES, Context.MODE_PRIVATE);
         File mypath = new File(directory, IMAGE + "_" + imageId + JPG);
@@ -47,7 +47,6 @@ public class FileService {
                 e.printStackTrace();
             }
         }
-        return directory.getAbsolutePath();
     }
 
     public Bitmap loadImageFromStorage(String imageId) {
