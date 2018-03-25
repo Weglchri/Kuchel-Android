@@ -95,8 +95,11 @@ public class RecipeListActivity extends AppCompatActivity {
         showRecipesInOverview();
     }
 
-    public void retrievedImageBitmapsFromDatabase(Bitmap bitmap) {
+    public void retrievedImageBitmap(Bitmap bitmap) {
         this.images.add(bitmap);
+
+//        todo maybe notify only and load via url
+
 //        todo method to show images needed - refresh
 //        showImagesInOverview();
     }
