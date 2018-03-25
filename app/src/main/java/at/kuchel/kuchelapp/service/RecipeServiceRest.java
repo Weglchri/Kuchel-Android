@@ -9,6 +9,7 @@ import at.kuchel.kuchelapp.RecipeListActivity;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.builder.RetrofitBuilder;
+import at.kuchel.kuchelapp.dto.BitmapImage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,10 +22,12 @@ public class RecipeServiceRest {
 
     private RecipeListActivity recipeListActivity;
     private FileService fileService;
+    private RecipeServiceDb recipeServiceDb;
 
     public RecipeServiceRest(RecipeListActivity recipeListActivity) {
         this.recipeListActivity = recipeListActivity;
         fileService = new FileService(recipeListActivity);
+        recipeServiceDb= new RecipeServiceDb(recipeListActivity);
     }
 
     public void retrieveRecipes() {
@@ -34,11 +37,13 @@ public class RecipeServiceRest {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 List<Recipe> recipes = response.body();
-                recipeListActivity.retrievedRecipesFromRest(recipes);
+                recipeListActivity.handleRetrievedRecipesFromRest(recipes);
 
                 for (Recipe recipe : recipes) {
                     if (recipe.getImages().size() > 0) {
-                        retrieveImages(recipe.getId(), recipe.getImages().get(0).getId());
+
+                        //todo check if update is needed
+                        retrieveImagesFromRestAndStoreToFileSystem(recipe.getId(), recipe.getImages().get(0).getId());
                     }
                 }
             }
@@ -50,7 +55,7 @@ public class RecipeServiceRest {
         });
     }
 
-    private void retrieveImages(Long recipeId, String imageId) {
+    private void retrieveImagesFromRestAndStoreToFileSystem(Long recipeId, String imageId) {
         Call<Image> call = RetrofitBuilder.createImageApi().getImage(String.valueOf(recipeId), imageId);
 
         call.enqueue(new Callback<Image>() {
@@ -71,8 +76,8 @@ public class RecipeServiceRest {
                         // 2. store bitmap as file to storage
                         fileService.saveToInternalStorage(bitmap, image.getId());
 
-                        // 3. return bitmap to main
-                        recipeListActivity.retrievedImageBitmap(bitmap);
+                        // 3. return bitmap with imageId to refresh the right element
+                        recipeListActivity.retrievedImageBitmap(new BitmapImage(image.getId(), bitmap));
                     }
                 }
             }

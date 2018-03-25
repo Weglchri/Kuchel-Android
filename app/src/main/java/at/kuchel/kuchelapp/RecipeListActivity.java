@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
+import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
@@ -45,7 +46,7 @@ public class RecipeListActivity extends AppCompatActivity {
     private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
     private RecipeServiceRest recipeServiceRest = new RecipeServiceRest(this);
     private KuchelDatabase database;
-    private List<Bitmap> images = new ArrayList<>();
+    private List<BitmapImage> images = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class RecipeListActivity extends AppCompatActivity {
         }
     }
 
-    public void retrievedRecipesFromRest(List<Recipe> recipes) {
+    public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
         this.recipes = recipes;
         showRecipesInOverview();
         recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, database);
@@ -95,8 +96,8 @@ public class RecipeListActivity extends AppCompatActivity {
         showRecipesInOverview();
     }
 
-    public void retrievedImageBitmap(Bitmap bitmap) {
-        this.images.add(bitmap);
+    public void retrievedImageBitmap(BitmapImage bitmapImage) {
+        this.images.add(bitmapImage);
 
 //        todo maybe notify only and load via url
 
