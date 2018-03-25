@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import at.kuchel.kuchelapp.R;
+import at.kuchel.kuchelapp.RecipeListActivity;
 
 /**
  * Created by bernhard on 24.03.2018.
@@ -20,24 +19,25 @@ import at.kuchel.kuchelapp.R;
 
 public class FileService {
 
-    private final Context context;
+    public static final String IMAGES = "images";
+    public static final String JPG = ".jpg";
+    private static final String IMAGE = "image";
+    private final RecipeListActivity recipeListActivity;
 
-    public FileService(Context context) {
-        this.context = context;
+    public FileService(RecipeListActivity recipeListActivity) {
+        this.recipeListActivity = recipeListActivity;
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage) {
-        ContextWrapper cw = new ContextWrapper(context);
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath = new File(directory, "profile.jpg");
+    public String saveToInternalStorage(Bitmap bitmapImage, String imageId) {
+        ContextWrapper cw = new ContextWrapper(recipeListActivity.getApplicationContext());
+        File directory = cw.getDir(IMAGES, Context.MODE_PRIVATE);
+        File mypath = new File(directory, IMAGE + "_" + imageId + JPG);
 
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            //compress if needed
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -50,12 +50,13 @@ public class FileService {
         return directory.getAbsolutePath();
     }
 
-    private File loadImageFromStorage(String path) {
-
+    public Bitmap loadImageFromStorage(String imageId) {
+        ContextWrapper cw = new ContextWrapper(recipeListActivity.getApplicationContext());
+        File directory = cw.getDir(IMAGES, Context.MODE_PRIVATE);
 
         try {
-            File f = new File(path, "profile.jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            File f = new File(directory, IMAGE + "_" + imageId + JPG);
+            return BitmapFactory.decodeStream(new FileInputStream(f));
 
 
         } catch (FileNotFoundException e) {

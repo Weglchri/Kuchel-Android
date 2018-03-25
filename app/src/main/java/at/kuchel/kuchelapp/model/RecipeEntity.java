@@ -27,6 +27,9 @@ public class RecipeEntity {
     @ColumnInfo(name = "duration")
     private String duration;
 
+    @ColumnInfo(name = "image_id")
+    private String imageId;
+
     @ColumnInfo(name = "difficulty")
     private String difficulty;
 
@@ -103,5 +106,13 @@ public class RecipeEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 }

@@ -40,6 +40,10 @@ public class RecipeMapper {
         recipe.setInstructions(InstructionMapper.mapToApi(recipeEntity.getId(), recipeEntity.getInstructions()));
         recipe.setIngredients(IngredientMapper.mapToApi(recipe.getId(), recipeEntity.getIngredients()));
 
+        if (recipeEntity.getImageId() != null) {
+            recipe.getImages().get(0).setId(recipeEntity.getImageId());
+        }
+
         return recipe;
     }
 
@@ -55,7 +59,9 @@ public class RecipeMapper {
 
         recipeEntity.setInstructions(InstructionMapper.mapToEntity(recipe.getId(), recipe.getInstructions()));
         recipeEntity.setIngredients(IngredientMapper.mapToEntity(recipe.getId(), recipe.getIngredients()));
-
+        if (recipe.getImages().size() > 0) {
+            recipeEntity.setImageId(recipe.getImages().get(0).getId());
+        }
         return recipeEntity;
     }
 }

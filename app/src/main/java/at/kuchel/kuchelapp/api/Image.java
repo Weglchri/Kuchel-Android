@@ -1,5 +1,8 @@
 package at.kuchel.kuchelapp.api;
 
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.Date;
 
 import lombok.Data;

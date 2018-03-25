@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.kuchel.kuchelapp.RecipeListActivity;
+import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
@@ -16,11 +17,11 @@ import at.kuchel.kuchelapp.repository.KuchelDatabase;
  * Created by bernhard on 23.03.2018.
  */
 
-public class RecipeDatabaseService {
+public class RecipeServiceDb {
 
     private RecipeListActivity recipeListActivity;
 
-    public RecipeDatabaseService(RecipeListActivity recipeListActivity) {
+    public RecipeServiceDb(RecipeListActivity recipeListActivity) {
         this.recipeListActivity = recipeListActivity;
     }
 

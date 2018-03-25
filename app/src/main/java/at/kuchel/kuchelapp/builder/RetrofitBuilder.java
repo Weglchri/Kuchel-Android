@@ -1,7 +1,10 @@
 package at.kuchel.kuchelapp.builder;
 
 
+import at.kuchel.kuchelapp.controller.ImageApi;
 import at.kuchel.kuchelapp.controller.RecipeApi;
+
+import at.kuchel.kuchelapp.service.GsonHelper;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -18,10 +21,21 @@ public class RetrofitBuilder {
         return createRetrofit().create(RecipeApi.class);
     }
 
+    public static ImageApi createImageApi() {
+        return createRetrofitWithOwnGson().create(ImageApi.class);
+    }
+
     private static Retrofit createRetrofit() {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
+    private static Retrofit createRetrofitWithOwnGson() {
+        return new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(GsonHelper.customGson))
                 .build();
     }
 }
