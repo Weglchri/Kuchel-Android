@@ -40,7 +40,7 @@ public class RecipeListActivity extends AppCompatActivity {
     private static RecipeListActivity mInstance;
     private boolean mTwoPane;
     private List<Recipe> recipes = new ArrayList<>();
-    private boolean loadOnlyFromDb = false;
+    private boolean loadOnlyFromDb = true;
 
     public static final String KUCHEL = "kuchel";
     private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
@@ -53,32 +53,15 @@ public class RecipeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
-        createDatabase();
-        //todo use if db has to be resetted
-//        getApplicationContext().deleteDatabase("kuchel");
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         if (findViewById(R.id.recipe_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
             mTwoPane = true;
         }
 
-        if (!loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
+        if (loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
             recipeServiceRest.retrieveRecipes();
         } else {
             recipeServiceDb.retrieveRecipes(database);
@@ -98,9 +81,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
     public void retrievedImageBitmap(BitmapImage bitmapImage) {
         this.images.add(bitmapImage);
-
 //        todo maybe notify only and load via url
-
 //        todo method to show images needed - refresh
 //        showImagesInOverview();
     }
@@ -115,11 +96,9 @@ public class RecipeListActivity extends AppCompatActivity {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, recipes, mTwoPane));
     }
 
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    public static class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
-
         private final List<Recipe> recipes;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -144,9 +123,7 @@ public class RecipeListActivity extends AppCompatActivity {
             }
         };
 
-        SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<Recipe> recipes,
-                                      boolean twoPane) {
+        SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane) {
             this.recipes = recipes;
             mParentActivity = parent;
             mTwoPane = twoPane;
@@ -192,7 +169,4 @@ public class RecipeListActivity extends AppCompatActivity {
         }
     }
 
-    private void createDatabase() {
-        database = Room.databaseBuilder(getApplicationContext(), KuchelDatabase.class, KUCHEL).build();
-    }
 }
