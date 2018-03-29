@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.kuchel.kuchelapp.RecipeListActivity;
-import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;

@@ -37,4 +37,5 @@ dependencies {
     compile 'android.arch.persistence.room:runtime:1.0.0'
     compileOnly 'org.projectlombok:lombok:1.16.20'
     annotationProcessor 'org.projectlombok:lombok:1.16.20'
+    implementation 'com.android.support:cardview-v7:26.1.0'
 }

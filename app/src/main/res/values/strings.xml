@@ -1,4 +1,16 @@
 <resources>
-    <string name="app_name">Kuchel App</string>
-    <string name="title_recipe_detail">Recipe Details</string>
+    <string name="app_name">Kuchel</string>
+    <string name="dashboard_overview">Dashboard</string>
+    <string name="title_recipe_list">Alle Rezepte</string>
+    <string name="my_title_recipe_list">Meine Rezepte</string>
+    <string name="title_recipe_detail">Rezeptdetails</string>
+
+    <string name="myrecipes">Meine Rezepte</string>
+    <string name="recipes">Alle Rezepte</string>
+    <string name="dashboard">Dashboard</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="placeholder">Platzhalter</string>
 </resources>

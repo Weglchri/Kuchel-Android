@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.wegls.myapplication.MainActivity">
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="Placeholder 1"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/courses"
+        android:title="Placeholder 2"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/scores"
+        android:title="Placeholder 3"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/handicap"
+        android:title="Placeholder 4"
+        app:showAsAction="never" />
+
+    <!--  template for further use
+    <item android:id="@+id/courses" android:icon="@drawable/course"
+        android:title="@string/courses" android:showAsAction="ifRoom|withText"/>
+    -->
+
+</menu>
