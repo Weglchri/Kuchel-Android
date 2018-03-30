@@ -40,7 +40,7 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                startActivity(intent);
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         Button button2 = (Button)findViewById(R.id.button_myrecipes);
@@ -48,9 +48,10 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                startActivity(intent);
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
+        /*
         Button button3 = (Button)findViewById(R.id.button_create_recipes);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,11 +59,10 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
 
             }
         });
+        */
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
 
         drawer = (DrawerLayout) findViewById(R.id.activity_main);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -104,12 +104,12 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
             return true;
         }
         if (id == R.id.nav_recipes) {  //go to all recipes
-            startActivity(new Intent(this, RecipeListActivity.class));
+            startActivity(new Intent(this, RecipeListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             drawer.closeDrawers();
             return true;
         }
         if (id == R.id.nav_myrecipes) {  //go to my recipes
-            startActivity(new Intent(this, RecipeListActivity.class));
+            startActivity(new Intent(this, RecipeListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             drawer.closeDrawers();
             return true;
         }

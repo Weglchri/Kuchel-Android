@@ -17,6 +17,7 @@
             android:name=".Dashboard"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
+                <data android:name="android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

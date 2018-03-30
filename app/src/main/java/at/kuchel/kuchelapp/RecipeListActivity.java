@@ -55,16 +55,18 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     private KuchelDatabase database;
     private List<BitmapImage> images = new ArrayList<>();
 
+    private DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_list);
+        drawer = (DrawerLayout) findViewById(R.id.activity_main_list);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -125,16 +127,17 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_dashboard) {  //go back to mainpage
-            startActivity(new Intent(this, Dashboard.class));
+            startActivity(new Intent(this, Dashboard.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            drawer.closeDrawers();
             return true;
         }
         if (id == R.id.nav_recipes) {  //go to all recipes
-            startActivity(new Intent(this, RecipeListActivity.class));
-            finish();
+            drawer.closeDrawers();
             return true;
         }
         if (id == R.id.nav_myrecipes) {  //go to my recipes
-            startActivity(new Intent(this, RecipeListActivity.class));
+            startActivity(new Intent(this, RecipeListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            drawer.closeDrawers();
             return true;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
