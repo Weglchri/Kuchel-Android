@@ -18,8 +18,8 @@
             android:title="@string/newrecipe" />
     </group>
 
-    <!-- example extension
-    <item android:title="Communicate">
+
+    <item android:title="Sonstiges">
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -29,5 +29,5 @@
                 android:title="Send" />
         </menu>
     </item>
-    -->
+
 </menu>
