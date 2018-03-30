@@ -8,9 +8,13 @@
     <string name="myrecipes">Meine Rezepte</string>
     <string name="recipes">Alle Rezepte</string>
     <string name="dashboard">Dashboard</string>
+    <string name="newrecipe">Rezept erstellen</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="placeholder">Platzhalter</string>
+    <string name="menu">Kuchel Menu</string>
+    <string name="welcome">Willkommen bei Kuchel</string>
+    <string name="alle_rezepte">Alle Rezepte</string>
 </resources>

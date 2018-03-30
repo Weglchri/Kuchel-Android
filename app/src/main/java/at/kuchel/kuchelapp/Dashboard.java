@@ -1,42 +1,70 @@
 package at.kuchel.kuchelapp;
 
-import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import at.kuchel.kuchelapp.repository.KuchelDatabase;
-
+import java.io.IOException;
 
 
 public class Dashboard extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KUCHEL = "kuchel";
-
-    private KuchelDatabase database;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         if(savedInstanceState == null) {
             //onSaveInstanceState(savedInstanceState);
         }
 
-        setContentView(R.layout.dashboard);
+        Button button_recipes = (Button)findViewById(R.id.button_recipes);
+        button_recipes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
+                startActivity(intent);
+            }
+        });
+        Button button2 = (Button)findViewById(R.id.button_myrecipes);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
+                startActivity(intent);
+            }
+        });
+        Button button3 = (Button)findViewById(R.id.button_create_recipes);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.activity_main);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -44,9 +72,6 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //database related stuff
-        createDatabase();
-        //getApplicationContext().deleteDatabase("kuchel");
     }
 
     /*                  user handling relevant
@@ -75,24 +100,23 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_dashboard) {  //go back to mainpage
-            startActivity(new Intent(this, Dashboard.class));
+            drawer.closeDrawers();
             return true;
         }
         if (id == R.id.nav_recipes) {  //go to all recipes
             startActivity(new Intent(this, RecipeListActivity.class));
+            drawer.closeDrawers();
             return true;
         }
         if (id == R.id.nav_myrecipes) {  //go to my recipes
             startActivity(new Intent(this, RecipeListActivity.class));
+            drawer.closeDrawers();
             return true;
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-    //database related connection create
-    private void createDatabase() {
-        database = Room.databaseBuilder(getApplicationContext(), KuchelDatabase.class, KUCHEL).build();
     }
 
 }

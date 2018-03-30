@@ -4,9 +4,12 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -55,13 +58,13 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_list);
+        setContentView(R.layout.activity_main_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_list);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -69,16 +72,25 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //database related stuff
+        createDatabase();
+        //getApplicationContext().deleteDatabase("kuchel");
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             mTwoPane = true;
         }
 
+        //try to use somehting like the "isOnline" method below
         if (loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
             recipeServiceRest.retrieveRecipes();
         } else {
             recipeServiceDb.retrieveRecipes(database);
         }
+    }
+
+    //database related connection create
+    private void createDatabase() {
+        database = Room.databaseBuilder(getApplicationContext(), KuchelDatabase.class, KUCHEL).build();
     }
 
     public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
@@ -118,12 +130,15 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
         }
         if (id == R.id.nav_recipes) {  //go to all recipes
             startActivity(new Intent(this, RecipeListActivity.class));
+            finish();
             return true;
         }
         if (id == R.id.nav_myrecipes) {  //go to my recipes
             startActivity(new Intent(this, RecipeListActivity.class));
             return true;
         }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -198,6 +213,12 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
                 mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
             }
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
 }
