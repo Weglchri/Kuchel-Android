@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Dashboard"
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <data android:name="android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION" />
@@ -25,12 +25,12 @@
 
         <activity
             android:name=".RecipeListActivity"
-            android:parentActivityName=".Dashboard"
+            android:parentActivityName=".MainActivity"
             android:label="@string/title_recipe_list"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="at.kuchel.kuchelapp.Dashboard" />
+                android:value="at.kuchel.kuchelapp.MainActivity" />
         </activity>
 
         <activity

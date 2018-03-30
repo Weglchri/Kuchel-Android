@@ -22,9 +22,10 @@ import android.widget.TextView;
 import java.io.IOException;
 
 
-public class Dashboard extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
+    private MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
         setContentView(R.layout.activity_main);
 
         if(savedInstanceState == null) {
-            //onSaveInstanceState(savedInstanceState);
+            //onSaveInstanceState();
         }
 
         Button button_recipes = (Button)findViewById(R.id.button_recipes);
@@ -40,7 +41,8 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             }
         });
         Button button2 = (Button)findViewById(R.id.button_myrecipes);
@@ -48,7 +50,8 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             }
         });
         /*
@@ -104,12 +107,13 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
             return true;
         }
         if (id == R.id.nav_recipes) {  //go to all recipes
-            startActivity(new Intent(this, RecipeListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            startActivity(new Intent(this, RecipeListActivity.class));
+            overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             drawer.closeDrawers();
             return true;
         }
         if (id == R.id.nav_myrecipes) {  //go to my recipes
-            startActivity(new Intent(this, RecipeListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            startActivity(new Intent(this, RecipeListActivity.class));
             drawer.closeDrawers();
             return true;
         }
@@ -117,6 +121,13 @@ public class Dashboard extends AppCompatActivity  implements NavigationView.OnNa
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
 }

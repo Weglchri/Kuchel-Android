@@ -3,7 +3,6 @@ package at.kuchel.kuchelapp;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,8 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
@@ -127,7 +123,8 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_dashboard) {  //go back to mainpage
-            startActivity(new Intent(this, Dashboard.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            startActivity(new Intent(this, MainActivity.class));
+            overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             drawer.closeDrawers();
             return true;
         }
@@ -136,7 +133,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             return true;
         }
         if (id == R.id.nav_myrecipes) {  //go to my recipes
-            startActivity(new Intent(this, RecipeListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            startActivity(new Intent(this, RecipeListActivity.class));
             drawer.closeDrawers();
             return true;
         }
@@ -216,6 +213,13 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
                 mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
     public boolean isOnline() {
