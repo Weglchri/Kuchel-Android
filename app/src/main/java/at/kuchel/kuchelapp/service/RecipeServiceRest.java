@@ -8,7 +8,9 @@ import java.util.List;
 import at.kuchel.kuchelapp.RecipeListActivity;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
-import at.kuchel.kuchelapp.builder.RetrofitBuilder;
+
+import at.kuchel.kuchelapp.controller.ImageApi;
+import at.kuchel.kuchelapp.controller.RecipeApi;
 import at.kuchel.kuchelapp.dto.BitmapImage;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,11 +29,11 @@ public class RecipeServiceRest {
     public RecipeServiceRest(RecipeListActivity recipeListActivity) {
         this.recipeListActivity = recipeListActivity;
         fileService = new FileService(recipeListActivity);
-        recipeServiceDb= new RecipeServiceDb(recipeListActivity);
+        recipeServiceDb = new RecipeServiceDb(recipeListActivity);
     }
 
     public void retrieveRecipes() {
-        Call<List<Recipe>> call = RetrofitBuilder.createRecipeApi().getRecipes();
+        Call<List<Recipe>> call = ServiceGenerator.createService(RecipeApi.class).getRecipes();
 
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
@@ -56,7 +58,7 @@ public class RecipeServiceRest {
     }
 
     private void retrieveImagesFromRestAndStoreToFileSystem(Long recipeId, String imageId) {
-        Call<Image> call = RetrofitBuilder.createImageApi().getImage(String.valueOf(recipeId), imageId);
+        Call<Image> call = ServiceGenerator.createService(ImageApi.class).getImage(String.valueOf(recipeId), imageId);
 
         call.enqueue(new Callback<Image>() {
             @Override

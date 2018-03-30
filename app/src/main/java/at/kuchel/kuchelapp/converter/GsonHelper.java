@@ -1,4 +1,4 @@
-package at.kuchel.kuchelapp.service;
+package at.kuchel.kuchelapp.converter;
 
 import java.lang.reflect.Type;
 

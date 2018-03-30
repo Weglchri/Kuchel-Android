@@ -52,13 +52,13 @@ public class RecipeServiceDb {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void retrieveRecipes(final KuchelDatabase database) {
+    public void retrieveRecipes() {
         new AsyncTask<Void, Void, Void>() {
             private List<Recipe> recipes = new ArrayList<>();
 
             @Override
             protected Void doInBackground(Void... params) {
-                recipes.addAll(RecipeMapper.mapToApi(database.recipeDao().getRecipesWithInstructionsAndIngredients()));
+                recipes.addAll(RecipeMapper.mapToApi(DatabaseManager.getDatabase().recipeDao().getRecipesWithInstructionsAndIngredients()));
                 return null;
             }
 

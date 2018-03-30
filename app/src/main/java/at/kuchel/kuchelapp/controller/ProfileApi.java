@@ -1,10 +1,9 @@
 package at.kuchel.kuchelapp.controller;
 
 
-import at.kuchel.kuchelapp.api.Recipe;
+import at.kuchel.kuchelapp.api.Profile;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 /**
  * Created by bernhard on 14.03.2018.
@@ -12,8 +11,8 @@ import retrofit2.http.Path;
 
 public interface ProfileApi {
 
-    @GET("profile/{username}")
-    Call<Recipe> getProfile(@Path("username") String username);
+    @GET("profiles")
+    Call<Profile> getProfile();
 
 }
 

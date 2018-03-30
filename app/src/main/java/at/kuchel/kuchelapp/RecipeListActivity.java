@@ -1,6 +1,5 @@
 package at.kuchel.kuchelapp;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -20,15 +19,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
+import at.kuchel.kuchelapp.service.DatabaseManager;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
-
-import java.util.ArrayList;
-import java.util.List;
+import at.kuchel.kuchelapp.service.UserService;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -48,7 +48,6 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     public static final String KUCHEL = "kuchel";
     private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
     private RecipeServiceRest recipeServiceRest = new RecipeServiceRest(this);
-    private KuchelDatabase database;
     private List<BitmapImage> images = new ArrayList<>();
 
     private DrawerLayout drawer;
@@ -71,30 +70,31 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
 
         //database related stuff
-        createDatabase();
-        //getApplicationContext().deleteDatabase("kuchel");
+        KuchelDatabase database = DatabaseManager.getDatabase(getApplicationContext());
+
+
+//        getApplicationContext().deleteDatabase("kuchel");
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             mTwoPane = true;
         }
 
+        UserService userService= new UserService();
+        userService.loadUserProfileViaRest("bernhard","pass");
+
+
         //try to use somehting like the "isOnline" method below
         if (loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
             recipeServiceRest.retrieveRecipes();
         } else {
-            recipeServiceDb.retrieveRecipes(database);
+            recipeServiceDb.retrieveRecipes();
         }
-    }
-
-    //database related connection create
-    private void createDatabase() {
-        database = Room.databaseBuilder(getApplicationContext(), KuchelDatabase.class, KUCHEL).build();
     }
 
     public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
         this.recipes = recipes;
         showRecipesInOverview();
-        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, database);
+        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, DatabaseManager.getDatabase(getApplicationContext()));
     }
 
     public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {

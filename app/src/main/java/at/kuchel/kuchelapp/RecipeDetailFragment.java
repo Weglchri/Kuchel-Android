@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 
 
 import at.kuchel.kuchelapp.api.Recipe;
-import at.kuchel.kuchelapp.builder.RetrofitBuilder;
 
+import at.kuchel.kuchelapp.controller.RecipeApi;
+import at.kuchel.kuchelapp.service.ServiceGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,7 +53,7 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     private void handleAsyncCallAndRedirect(final FragmentActivity activity, String id) {
-        Call<Recipe> call = RetrofitBuilder.createRecipeApi().getRecipe(id);
+        Call<Recipe> call = ServiceGenerator.createService(RecipeApi.class).getRecipe(id);
 
         call.enqueue(new Callback<Recipe>() {
             @Override
