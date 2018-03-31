@@ -1,12 +1,16 @@
 package at.kuchel.kuchelapp.service;
 
+import org.springframework.http.HttpStatus;
+
 import at.kuchel.kuchelapp.api.Profile;
+import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
 import at.kuchel.kuchelapp.controller.ProfileApi;
 import at.kuchel.kuchelapp.model.GlobalParamEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.PASSWORD;
 import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 /**
@@ -22,19 +26,18 @@ public class UserService {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 int code = response.code();
-                if (code == 200) {
-                    //todo return to activity
+                if (code == HttpStatus.OK.value()) {
+                    //todo return to activity with success
                     Profile profile = response.body();
-                    //todo store to db
 
-
-//                    GlobalParamService.storeGlobalParam(USERNAME, username);
-//                    GlobalParamService.storeGlobalParam(PASSWORD, password);
+                    //username and password id correct and can be stored
+                    GlobalParamService.storeGlobalParam(new GlobalParamBuilder().setKey(USERNAME).setValue(username).build());
+                    GlobalParamService.storeGlobalParam(new GlobalParamBuilder().setKey(PASSWORD).setValue(password).build());
 
                     GlobalParamEntity entity = GlobalParamService.retrieveGlobalParam(USERNAME);
 
                 } else {
-                    //todo return to activity
+                    //todo return to activity with error
                 }
             }
 

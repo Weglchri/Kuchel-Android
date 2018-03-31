@@ -3,7 +3,6 @@ package at.kuchel.kuchelapp.service;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
-import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
 import at.kuchel.kuchelapp.model.GlobalParamEntity;
 
 /**
@@ -14,11 +13,17 @@ import at.kuchel.kuchelapp.model.GlobalParamEntity;
 public class GlobalParamService {
 
     @SuppressLint("StaticFieldLeak")
-    public static void storeGlobalParam(final String key, final String value) {
+    public static void storeGlobalParam(final GlobalParamEntity globalParam) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                DatabaseManager.getDatabase().globalParamDao().insert(new GlobalParamBuilder().setKey(key).setValue(value).build());
+
+                GlobalParamEntity gp = retrieveGlobalParam(globalParam.getKey());
+                if(gp==null){
+                    DatabaseManager.getDatabase().globalParamDao().insert(globalParam);
+                }else {
+                    DatabaseManager.getDatabase().globalParamDao().update(globalParam);
+                }
                 return null;
             }
         }.execute();

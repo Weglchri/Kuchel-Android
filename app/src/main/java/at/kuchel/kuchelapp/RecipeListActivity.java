@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import java.util.List;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
-import at.kuchel.kuchelapp.repository.KuchelDatabase;
 import at.kuchel.kuchelapp.service.DatabaseManager;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
@@ -71,9 +71,6 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
         //database related stuff
         DatabaseManager.getDatabase(getApplicationContext());
-        KuchelDatabase database = DatabaseManager.getDatabase(getApplicationContext());
-
-
 //        getApplicationContext().deleteDatabase("kuchel");
 
         if (findViewById(R.id.recipe_detail_container) != null) {
@@ -105,8 +102,10 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
     public void retrievedImageBitmap(BitmapImage bitmapImage) {
         this.images.add(bitmapImage);
+        View recyclerView = findViewById(R.id.recipe_list);
 //        todo maybe notify only and load via url
 //        todo method to show images needed - refresh
+        setupRecyclerView((RecyclerView) recyclerView);
 //        showImagesInOverview();
     }
 
@@ -117,7 +116,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, recipes, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, recipes, mTwoPane,images));
     }
 
     @Override
@@ -147,7 +146,9 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
         private final RecipeListActivity mParentActivity;
         private final List<Recipe> recipes;
+        private List<BitmapImage> mImages;
         private final boolean mTwoPane;
+
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,10 +171,11 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             }
         };
 
-        SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane) {
+        SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane, List<BitmapImage> images) {
             this.recipes = recipes;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mImages=images;
         }
 
         @Override
@@ -189,6 +191,10 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             holder.mNameView.setText(recipes.get(position).getName());
             holder.mDurationView.setText(recipes.get(position).getDuration());
             holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
+            if(mImages.size()>0){
+                holder.mImageView.setImageBitmap(mImages.get(0).getImage());
+            }
+
 
             holder.itemView.setTag(recipes.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -205,6 +211,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             final TextView mNameView;
             final TextView mDurationView;
             final TextView mDifficultyView;
+            final ImageView mImageView;
 
             ViewHolder(View view) {
                 super(view);
@@ -212,6 +219,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
                 mNameView = (TextView) view.findViewById(R.id.content_text);
                 mDurationView = (TextView) view.findViewById(R.id.duration_text);
                 mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
+                mImageView = (ImageView) view.findViewById(R.id.imageView);
             }
         }
     }
