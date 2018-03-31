@@ -23,18 +23,9 @@ public final    class GlobalParamBuilder {
 
     public final GlobalParamEntity build() {
         GlobalParamEntity entity = new GlobalParamEntity();
-        entity.setKey(getKey());
-        entity.setValue(getValue());
+        entity.setKey(key);
+        entity.setValue(value);
         return entity;
     }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
 
 }

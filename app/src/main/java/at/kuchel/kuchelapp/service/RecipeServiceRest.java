@@ -3,18 +3,23 @@ package at.kuchel.kuchelapp.service;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.util.Date;
 import java.util.List;
 
 import at.kuchel.kuchelapp.RecipeListActivity;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
-
+import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
 import at.kuchel.kuchelapp.controller.ImageApi;
 import at.kuchel.kuchelapp.controller.RecipeApi;
 import at.kuchel.kuchelapp.dto.BitmapImage;
+import at.kuchel.kuchelapp.mapper.LastSyncMapper;
+import at.kuchel.kuchelapp.model.GlobalParamEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.LAST_SYNC_DATE;
 
 /**
  * Created by bernhard on 23.03.2018.
@@ -33,14 +38,22 @@ public class RecipeServiceRest {
     }
 
     public void retrieveRecipes() {
-        Call<List<Recipe>> call = ServiceGenerator.createService(RecipeApi.class).getRecipes();
+
+        GlobalParamEntity lastSyncDate = GlobalParamService.retrieveGlobalParam(LAST_SYNC_DATE);
+        Call<List<Recipe>> call;
+        if (lastSyncDate != null) {
+            call = ServiceGenerator.createService(RecipeApi.class).getRecipes(LastSyncMapper.map(lastSyncDate));
+        } else {
+            call = ServiceGenerator.createService(RecipeApi.class).getRecipes();
+        }
+
 
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 List<Recipe> recipes = response.body();
                 recipeListActivity.handleRetrievedRecipesFromRest(recipes);
-
+                GlobalParamService.storeGlobalParam(new GlobalParamBuilder().setKey(LAST_SYNC_DATE).setValue(String.valueOf(new Date().getTime())).build());
                 for (Recipe recipe : recipes) {
                     if (recipe.getImages().size() > 0) {
 

@@ -38,12 +38,11 @@ import at.kuchel.kuchelapp.service.UserService;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class RecipeListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static RecipeListActivity mInstance;
     private boolean mTwoPane;
     private List<Recipe> recipes = new ArrayList<>();
-    private boolean loadOnlyFromDb = false;
 
     public static final String KUCHEL = "kuchel";
     private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
@@ -77,12 +76,12 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             mTwoPane = true;
         }
 
-        UserService userService= new UserService();
-        userService.loadUserProfileViaRest("bernhard","pass");
+        UserService userService = new UserService();
+        userService.loadUserProfileViaRest("bernhard", "pass");
 
 
         //try to use somehting like the "isOnline" method below
-        if (!loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
+        if (true) {      //todo check if internet is ok and speed good - for now simulate db read or rest
             recipeServiceRest.retrieveRecipes();
         } else {
             recipeServiceDb.retrieveRecipes();
@@ -92,6 +91,9 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
         this.recipes = recipes;
         showRecipesInOverview();
+
+        //todo load only not loaded until now
+        recipeServiceDb.retrieveRecipes();
         recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, DatabaseManager.getDatabase(getApplicationContext()));
     }
 
@@ -103,20 +105,17 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     public void retrievedImageBitmap(BitmapImage bitmapImage) {
         this.images.add(bitmapImage);
         View recyclerView = findViewById(R.id.recipe_list);
-//        todo maybe notify only and load via url
-//        todo method to show images needed - refresh
         setupRecyclerView((RecyclerView) recyclerView);
-//        showImagesInOverview();
     }
 
-    private void showRecipesInOverview(){
+    private void showRecipesInOverview() {
         View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, recipes, mTwoPane,images));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, recipes, mTwoPane, images));
     }
 
     @Override
@@ -175,7 +174,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             this.recipes = recipes;
             mParentActivity = parent;
             mTwoPane = twoPane;
-            mImages=images;
+            mImages = images;
         }
 
         @Override
@@ -193,7 +192,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
 
 
-            if(mImages.size()>position){
+            if (mImages.size() > position) {
                 holder.mImageView.setImageBitmap(mImages.get(position).getImage());
             }
 
