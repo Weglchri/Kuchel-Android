@@ -43,7 +43,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     private static RecipeListActivity mInstance;
     private boolean mTwoPane;
     private List<Recipe> recipes = new ArrayList<>();
-    private boolean loadOnlyFromDb = true;
+    private boolean loadOnlyFromDb = false;
 
     public static final String KUCHEL = "kuchel";
     private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
@@ -82,7 +82,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
 
         //try to use somehting like the "isOnline" method below
-        if (loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
+        if (!loadOnlyFromDb) {      //todo check if internet is ok and speed good - for now simulate db read or rest
             recipeServiceRest.retrieveRecipes();
         } else {
             recipeServiceDb.retrieveRecipes();
@@ -191,8 +191,10 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             holder.mNameView.setText(recipes.get(position).getName());
             holder.mDurationView.setText(recipes.get(position).getDuration());
             holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
-            if(mImages.size()>0){
-                holder.mImageView.setImageBitmap(mImages.get(0).getImage());
+
+
+            if(mImages.size()>position){
+                holder.mImageView.setImageBitmap(mImages.get(position).getImage());
             }
 
 
