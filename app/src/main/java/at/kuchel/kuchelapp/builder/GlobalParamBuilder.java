@@ -11,9 +11,6 @@ public final    class GlobalParamBuilder {
     private String key;
     private String value;
 
-
-
-
     public final  GlobalParamBuilder setKey(String key) {
         this.key=key;
         return this;
@@ -30,7 +27,6 @@ public final    class GlobalParamBuilder {
         entity.setValue(getValue());
         return entity;
     }
-
 
     public String getValue() {
         return value;

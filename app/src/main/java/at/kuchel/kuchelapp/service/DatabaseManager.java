@@ -15,13 +15,18 @@ public class DatabaseManager {
 
     private static DatabaseManager mInstance;
     private static KuchelDatabase kuchel;
+    private static KuchelDatabase kuchelReadOnly;
 
     public DatabaseManager(Context context) {
         kuchel = Room.databaseBuilder(context, KuchelDatabase.class, KUCHEL).build();
+        kuchelReadOnly = Room.databaseBuilder(context, KuchelDatabase.class, KUCHEL).allowMainThreadQueries().build();
     }
 
     public static KuchelDatabase getDatabase() {
         return kuchel;
+    }
+    public static KuchelDatabase getDatabaseReadOnly() {
+        return kuchelReadOnly;
     }
 
     public static KuchelDatabase getDatabase(Context context) {

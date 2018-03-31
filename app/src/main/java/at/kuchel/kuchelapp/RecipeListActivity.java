@@ -70,6 +70,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
 
         //database related stuff
+        DatabaseManager.getDatabase(getApplicationContext());
         KuchelDatabase database = DatabaseManager.getDatabase(getApplicationContext());
 
 

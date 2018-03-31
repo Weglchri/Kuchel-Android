@@ -1,16 +1,12 @@
 package at.kuchel.kuchelapp.service;
 
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
-
 import at.kuchel.kuchelapp.api.Profile;
-import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
 import at.kuchel.kuchelapp.controller.ProfileApi;
+import at.kuchel.kuchelapp.model.GlobalParamEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.PASSWORD;
 import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 /**
@@ -32,8 +28,10 @@ public class UserService {
                     //todo store to db
 
 
-                    storeGlobalParams(USERNAME, username);
-                    storeGlobalParams(PASSWORD, password);
+//                    GlobalParamService.storeGlobalParam(USERNAME, username);
+//                    GlobalParamService.storeGlobalParam(PASSWORD, password);
+
+                    GlobalParamEntity entity = GlobalParamService.retrieveGlobalParam(USERNAME);
 
                 } else {
                     //todo return to activity
@@ -46,17 +44,4 @@ public class UserService {
             }
         });
     }
-
-    //todo extract to own class
-    @SuppressLint("StaticFieldLeak")
-    private void storeGlobalParams(final String key, final String value) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                DatabaseManager.getDatabase().globalParamDao().insert(new GlobalParamBuilder().setKey(key).setValue(value).build());
-                return null;
-            }
-        }.execute();
-    }
-
 }
