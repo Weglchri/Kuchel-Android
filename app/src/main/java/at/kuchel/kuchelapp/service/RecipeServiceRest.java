@@ -29,12 +29,10 @@ public class RecipeServiceRest {
 
     private RecipeListActivity recipeListActivity;
     private FileService fileService;
-    private RecipeServiceDb recipeServiceDb;
 
     public RecipeServiceRest(RecipeListActivity recipeListActivity) {
         this.recipeListActivity = recipeListActivity;
         fileService = new FileService(recipeListActivity);
-        recipeServiceDb = new RecipeServiceDb(recipeListActivity);
     }
 
     public void retrieveRecipes() {

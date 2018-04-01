@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,13 +23,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.DatabaseManager;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
-import at.kuchel.kuchelapp.service.UserService;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -76,8 +77,8 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             mTwoPane = true;
         }
 
-        UserService userService = new UserService();
-        userService.loadUserProfileViaRest("bernhard", "pass");
+//        UserService userService = new UserService();
+//        userService.loadUserProfileViaRest("bernhard", "pass");
 
 
         //try to use somehting like the "isOnline" method below
@@ -89,7 +90,8 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     }
 
     public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
-        this.recipes = recipes;
+        Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes.size()));
+        this.recipes.addAll(recipes);
         showRecipesInOverview();
 
         //todo load only not loaded until now
@@ -98,7 +100,21 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
     }
 
     public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {
-        recipes = recipesFromDb;
+        Log.i("retrieve_recipe_db", String.format("Retrieved %s recipes from db", recipesFromDb.size()));
+        for (Recipe recipeDb : recipesFromDb) {
+            boolean alreadyAdded = false;
+            for (Recipe alreadyReturnedRecipe : this.recipes) {
+                if (Objects.equals(alreadyReturnedRecipe.getId(), recipeDb.getId())) {
+                    alreadyAdded = true;
+                }
+            }
+            if (!alreadyAdded) {
+                Log.i("retrieve_recipe_db_add", String.format("recipe with id %s is added from db to list", recipeDb.getId()));
+                this.recipes.add(recipeDb);
+            }
+        }
+
+        this.recipes.addAll(recipesFromDb);
         showRecipesInOverview();
     }
 
