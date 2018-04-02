@@ -3,6 +3,7 @@ package at.kuchel.kuchelapp.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.model.RecipeEntity;
 
@@ -41,7 +42,9 @@ public class RecipeMapper {
         recipe.setIngredients(IngredientMapper.mapToApi(recipe.getId(), recipeEntity.getIngredients()));
 
         if (recipeEntity.getImageId() != null) {
-            recipe.getImages().get(0).setId(recipeEntity.getImageId());
+            Image image =  new Image();
+            image.setId(recipeEntity.getImageId());
+            recipe.getImages().add(image);
         }
 
         return recipe;

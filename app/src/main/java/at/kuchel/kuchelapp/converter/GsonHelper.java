@@ -1,7 +1,5 @@
 package at.kuchel.kuchelapp.converter;
 
-import java.lang.reflect.Type;
-
 import android.util.Base64;
 
 import com.google.gson.Gson;
@@ -14,12 +12,14 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import java.lang.reflect.Type;
+
 /**
  * Created by bernhard on 24.03.2018.
  */
 
 public class GsonHelper {
-    public static final Gson customGson = new GsonBuilder().registerTypeHierarchyAdapter(byte[].class,
+    public static final Gson customGson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").registerTypeHierarchyAdapter(byte[].class,
             new ByteArrayToBase64TypeAdapter()).create();
 
     private static class ByteArrayToBase64TypeAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {

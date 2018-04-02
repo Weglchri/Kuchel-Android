@@ -1,6 +1,7 @@
 package at.kuchel.kuchelapp.service;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 import at.kuchel.kuchelapp.RecipeListActivity;
 import at.kuchel.kuchelapp.api.Recipe;
+import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
 
@@ -19,9 +21,11 @@ import at.kuchel.kuchelapp.repository.KuchelDatabase;
 public class RecipeServiceDb {
 
     private RecipeListActivity recipeListActivity;
+    private FileService fileService;
 
     public RecipeServiceDb(RecipeListActivity recipeListActivity) {
         this.recipeListActivity = recipeListActivity;
+        this.fileService = new FileService(recipeListActivity);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -76,6 +80,21 @@ public class RecipeServiceDb {
             protected Void doInBackground(Void... params) {
                 database.recipeDao().insertAll(RecipeMapper.mapToEntity(recipes));
                 return null;
+            }
+        }.execute();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void loadImages(final String imageId) {
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                return fileService.loadImageFromStorage(imageId);
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                recipeListActivity.retrievedImageBitmap(new BitmapImage(imageId, bitmap));
             }
         }.execute();
     }

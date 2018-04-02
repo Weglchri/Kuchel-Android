@@ -110,6 +110,8 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             }
             if (!alreadyAdded) {
                 Log.i("retrieve_recipe_db_add", String.format("recipe with id %s is added from db to list", recipeDb.getId()));
+                if (recipeDb.getImages().size() > 0)
+                    recipeServiceDb.loadImages(recipeDb.getImages().get(0).getId());
                 this.recipes.add(recipeDb);
             }
         }
