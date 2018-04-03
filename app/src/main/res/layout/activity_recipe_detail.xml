@@ -34,6 +34,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <Button android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="photo"></Button>
+    <ImageView android:id="@+id/imageView1" android:layout_height="wrap_content" android:src="@drawable/icon" android:layout_width="wrap_content"></ImageView>
+
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/recipe_detail_container"
         android:layout_width="match_parent"

@@ -82,11 +82,8 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
 
         //try to use somehting like the "isOnline" method below
-        if (true) {      //todo check if internet is ok and speed good - for now simulate db read or rest
-            recipeServiceRest.retrieveRecipes();
-        } else {
-            recipeServiceDb.retrieveRecipes();
-        }
+        //todo check if internet is ok and speed good - for now simulate db read or rest
+        recipeServiceRest.retrieveRecipes();
     }
 
     public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {

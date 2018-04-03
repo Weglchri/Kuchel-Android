@@ -1,6 +1,5 @@
 package at.kuchel.kuchelapp;
 
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,9 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import at.kuchel.kuchelapp.api.Recipe;
-
 import at.kuchel.kuchelapp.controller.RecipeApi;
 import at.kuchel.kuchelapp.service.ServiceGenerator;
 import retrofit2.Call;
@@ -60,10 +57,6 @@ public class RecipeDetailFragment extends Fragment {
             public void onResponse(Call<Recipe> call, Response<Recipe> response) {
                 recipe = response.body();
 
-                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-                if (appBarLayout != null) {
-                    appBarLayout.setTitle(recipe.getName());
-                }
             }
 
             @Override

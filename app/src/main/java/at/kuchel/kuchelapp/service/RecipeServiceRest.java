@@ -51,7 +51,8 @@ public class RecipeServiceRest {
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 List<Recipe> recipes = response.body();
                 recipeListActivity.handleRetrievedRecipesFromRest(recipes);
-                GlobalParamService.storeGlobalParam(new GlobalParamBuilder().setKey(LAST_SYNC_DATE).setValue(String.valueOf(new Date().getTime())).build());
+                GlobalParamService.storeGlobalParam(new GlobalParamBuilder().setKey(LAST_SYNC_DATE)
+                        .setValue(String.valueOf(new Date().getTime())).build());
                 for (Recipe recipe : recipes) {
                     if (recipe.getImages().size() > 0) {
 
@@ -79,11 +80,7 @@ public class RecipeServiceRest {
                 if (image != null) {
 
                     // 1. create bitmap from response image
-                    BitmapFactory.Options opt = new BitmapFactory.Options();
-                    opt.inDither = true;
-                    opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                    byte[] imageByteArray = image.getData();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
+                    Bitmap bitmap = getBitmap(image);
                     if (bitmap != null) {
 
                         // 2. store bitmap as file to storage
@@ -101,5 +98,13 @@ public class RecipeServiceRest {
                 call.toString();
             }
         });
+    }
+
+    private Bitmap getBitmap(Image image) {
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inDither = true;
+        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        byte[] imageByteArray = image.getData();
+        return BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
     }
 }
