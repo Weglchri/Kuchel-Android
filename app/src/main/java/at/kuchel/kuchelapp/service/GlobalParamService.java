@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 import at.kuchel.kuchelapp.model.GlobalParamEntity;
+import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 
 /**
  * Created by bernhard on 19.03.2018.

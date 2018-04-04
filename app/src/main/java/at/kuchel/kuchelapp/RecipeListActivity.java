@@ -27,7 +27,7 @@ import java.util.Objects;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
-import at.kuchel.kuchelapp.service.DatabaseManager;
+import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
 

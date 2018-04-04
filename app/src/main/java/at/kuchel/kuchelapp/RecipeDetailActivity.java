@@ -88,5 +88,4 @@ public class RecipeDetailActivity extends AppCompatActivity {
             imageView.setImageBitmap(photo);
         }
     }
-
 }

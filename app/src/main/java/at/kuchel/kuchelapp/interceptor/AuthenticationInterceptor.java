@@ -1,4 +1,4 @@
-package at.kuchel.kuchelapp.service;
+package at.kuchel.kuchelapp.interceptor;
 
 import java.io.IOException;
 

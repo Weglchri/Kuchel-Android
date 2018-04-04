@@ -2,7 +2,9 @@ package at.kuchel.kuchelapp.service;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import at.kuchel.kuchelapp.controller.RecipeApi;
 import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.mapper.LastSyncMapper;
 import at.kuchel.kuchelapp.model.GlobalParamEntity;
+import at.kuchel.kuchelapp.service.utils.ServiceGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,9 +43,9 @@ public class RecipeServiceRest {
         GlobalParamEntity lastSyncDate = GlobalParamService.retrieveGlobalParam(LAST_SYNC_DATE);
         Call<List<Recipe>> call;
         if (lastSyncDate != null) {
-            call = ServiceGenerator.createService(RecipeApi.class).getRecipes(LastSyncMapper.map(lastSyncDate));
+            call = ServiceGenerator.createService(RecipeApi.class,true).getRecipes(LastSyncMapper.map(lastSyncDate));
         } else {
-            call = ServiceGenerator.createService(RecipeApi.class).getRecipes();
+            call = ServiceGenerator.createService(RecipeApi.class,true).getRecipes();
         }
 
 
@@ -64,13 +67,14 @@ public class RecipeServiceRest {
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                // Log error here since request failed
+                Log.i("no_connection","Could not establish connection - try to load from db");
+                recipeListActivity.handleRetrievedRecipesFromRest(Collections.<Recipe>emptyList());
             }
         });
     }
 
     private void retrieveImagesFromRestAndStoreToFileSystem(Long recipeId, String imageId) {
-        Call<Image> call = ServiceGenerator.createService(ImageApi.class).getImage(String.valueOf(recipeId), imageId);
+        Call<Image> call = ServiceGenerator.createService(ImageApi.class,false).getImage(String.valueOf(recipeId), imageId);
 
         call.enqueue(new Callback<Image>() {
             @Override
@@ -78,7 +82,6 @@ public class RecipeServiceRest {
                 Image image = response.body();
 
                 if (image != null) {
-
                     // 1. create bitmap from response image
                     Bitmap bitmap = getBitmap(image);
                     if (bitmap != null) {

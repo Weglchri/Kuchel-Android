@@ -1,4 +1,4 @@
-package at.kuchel.kuchelapp.service;
+package at.kuchel.kuchelapp.service.utils;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;

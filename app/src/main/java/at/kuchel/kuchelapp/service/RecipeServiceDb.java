@@ -13,6 +13,7 @@ import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.repository.KuchelDatabase;
+import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 
 /**
  * Created by bernhard on 23.03.2018.
