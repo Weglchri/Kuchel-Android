@@ -71,7 +71,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
         //database related stuff
         DatabaseManager.getDatabase(getApplicationContext());
-//        getApplicationContext().deleteDatabase("kuchel");
+        getApplicationContext().deleteDatabase("kuchel");
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             mTwoPane = true;

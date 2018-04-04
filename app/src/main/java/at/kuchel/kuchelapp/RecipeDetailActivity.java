@@ -3,7 +3,10 @@ package at.kuchel.kuchelapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,14 +35,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
-
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -61,20 +64,21 @@ public class RecipeDetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.recipe_detail_container, fragment)
                     .commit();
-
            recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
         }
 
 
 
         this.imageView = (ImageView)this.findViewById(R.id.imageView1);
-        Button photoButton = (Button) this.findViewById(R.id.button1);
-        photoButton.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
+        cameraButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                }
             }
         });
     }
@@ -84,8 +88,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             ImageService imageService = new ImageService();
             imageService.uploadImage(photo,recipeId);
-
             imageView.setImageBitmap(photo);
+
+            BitmapDrawable background = null; //todo set feshly taken image
+            getSupportActionBar().setBackgroundDrawable(background);
         }
     }
 }
