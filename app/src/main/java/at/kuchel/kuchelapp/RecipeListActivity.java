@@ -107,7 +107,6 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             }
         }
 
-        this.recipes.addAll(recipesFromDb);
         showRecipesInOverview();
     }
 
