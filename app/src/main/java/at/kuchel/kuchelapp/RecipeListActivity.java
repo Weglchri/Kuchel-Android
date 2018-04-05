@@ -6,9 +6,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +29,7 @@ import java.util.Objects;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
+import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
 import at.kuchel.kuchelapp.service.utils.DatabaseManager;
@@ -63,10 +66,20 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
         toolbar.setTitle(getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        /*
+        drawer = (DrawerLayout) findViewById(R.id.activity_main_list);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        */
+
 
         //database related stuff
         DatabaseManager.getDatabase(getApplicationContext());
-//        getApplicationContext().deleteDatabase("kuchel");
+        //getApplicationContext().deleteDatabase("kuchel");
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             mTwoPane = true;
@@ -74,6 +87,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
 //        UserService userService = new UserService();
 //        userService.loadUserProfileViaRest("bernhard", "pass");
+
 
         //try to use somehting like the "isOnline" method below
         //todo check if internet is ok and speed good - for now simulate db read or rest
@@ -107,6 +121,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             }
         }
 
+        this.recipes.addAll(recipesFromDb);
         showRecipesInOverview();
     }
 

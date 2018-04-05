@@ -1,14 +1,20 @@
 package at.kuchel.kuchelapp;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import at.kuchel.kuchelapp.service.ImageService;
+import at.kuchel.kuchelapp.service.utils.PermissionHandler;
 
 /**
  * An activity representing a single Recipe detail screen. This
@@ -27,12 +34,17 @@ import at.kuchel.kuchelapp.service.ImageService;
 public class RecipeDetailActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST = 1888;
+    private static final int MY_CAMERA_REQUEST_PERMISSION = 1800;
     private String recipeId;
+    private Activity recipeListActivity;
+    private final PermissionHandler permissionHandler = new PermissionHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
+
+        this.recipeListActivity = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detailed);
         setSupportActionBar(toolbar);
@@ -46,7 +58,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         // For more information, see the Fragments API guide at:
         //
         // http://developer.android.com/guide/components/fragments.html
-        //
+
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
@@ -60,26 +72,31 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         FloatingActionButton cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                if(permissionHandler.askForPermissionCamera(recipeListActivity) == true) {
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                    }
                 }
             }
         });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            ImageService imageService = new ImageService();
-            imageService.uploadImage(photo,recipeId);
-            BitmapDrawable background = new BitmapDrawable(getResources(), photo);
+            if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                ImageService imageService = new ImageService();
+                imageService.uploadImage(photo,recipeId);
 
-            AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
-            barLayout.setBackground(background);
-        }
+                //just background related
+                BitmapDrawable background = new BitmapDrawable(getResources(), photo);
+                AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
+                barLayout.setBackground(background);
+            }
+
     }
 
     @Override
