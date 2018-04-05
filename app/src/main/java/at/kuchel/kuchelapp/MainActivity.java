@@ -54,15 +54,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             }
         });
-        /*
-        Button button3 = (Button)findViewById(R.id.button_create_recipes);
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        */
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -126,7 +117,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
         overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 

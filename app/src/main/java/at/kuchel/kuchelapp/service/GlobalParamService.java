@@ -22,7 +22,7 @@ public class GlobalParamService {
                 GlobalParamEntity gp = retrieveGlobalParam(globalParam.getKey());
                 if(gp==null){
                     DatabaseManager.getDatabase().globalParamDao().insert(globalParam);
-                }else {
+                }else{
                     DatabaseManager.getDatabase().globalParamDao().update(globalParam);
                 }
                 return null;

@@ -179,13 +179,13 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
                     RecipeDetailFragment fragment = new RecipeDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in, R.anim.nothing)
                             .replace(R.id.recipe_detail_container, fragment)
                             .commit();
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
                     intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
-
                     context.startActivity(intent);
                 }
             }
@@ -200,8 +200,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recipe_list_content, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_content, parent, false);
             return new ViewHolder(view);
         }
 
@@ -212,11 +211,9 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             holder.mDurationView.setText(recipes.get(position).getDuration());
             holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
 
-
             if (mImages.size() > position) {
                 holder.mImageView.setImageBitmap(mImages.get(position).getImage());
             }
-
 
             holder.itemView.setTag(recipes.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

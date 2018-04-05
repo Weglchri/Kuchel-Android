@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dashboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <!-- standard front -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="385dp"
+        android:orientation="vertical"
+        app:layout_anchor="@+id/textView"
+        app:layout_anchorGravity="bottom|center">
+
+        <Button
+            android:id="@+id/button_recipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="@android:color/holo_green_light"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="@string/recipes"
+            app:layout_anchor="@+id/textView"
+            app:layout_anchorGravity="bottom|center" />
+
+        <Button
+            android:id="@+id/button_myrecipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="@android:color/holo_green_light"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="@string/myrecipes"
+            app:layout_anchor="@+id/textView"
+            app:layout_anchorGravity="bottom|center" />
+
+        <Button
+            android:id="@+id/button_create_recipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="@android:color/holo_green_light"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="@string/newrecipe"
+            app:layout_anchor="@+id/textView"
+            app:layout_anchorGravity="bottom|center" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="270dp"
+        android:fontFamily="@font/orangejuice"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/welcome"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle.Inverse"
+        android:textSize="38sp"
+        android:textStyle="italic"
+        app:layout_anchor="@+id/imageView"
+        app:layout_anchorGravity="bottom|center" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="Kuchel_welcome_image"
+        app:srcCompat="@drawable/lunch" />
+
+    <include
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</android.support.design.widget.CoordinatorLayout>

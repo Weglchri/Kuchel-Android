@@ -19,4 +19,8 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="titletextsize" parent="@style/Base.TextAppearance.AppCompat.Title">
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>
