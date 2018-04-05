@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +35,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detailed);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.
@@ -69,7 +71,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
 
 
-        this.imageView = (ImageView)this.findViewById(R.id.imageView1);
         FloatingActionButton cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
 
@@ -88,10 +89,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             ImageService imageService = new ImageService();
             imageService.uploadImage(photo,recipeId);
-            imageView.setImageBitmap(photo);
+            BitmapDrawable background = new BitmapDrawable(getResources(), photo);
 
-            BitmapDrawable background = null; //todo set feshly taken image
-            getSupportActionBar().setBackgroundDrawable(background);
+            AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
+            barLayout.setBackground(background);
+
         }
     }
 }

@@ -8,14 +8,14 @@
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/app_bar_detailed"
         android:layout_width="match_parent"
-        android:layout_height="202dp"
+        android:layout_height="269dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+            android:id="@+id/toolbar_layout_detailed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -23,7 +23,7 @@
             app:toolbarId="@+id/toolbar">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/detail_toolbar"
+                android:id="@+id/toolbar_detailed"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
@@ -32,15 +32,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="match_parent"
-        android:layout_height="202dp"
-        android:layout_gravity="top"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/title_recipe_detail"
-        android:src="@drawable/icon" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/recipe_detail_container"
@@ -52,12 +43,14 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/camera_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorYellowGrain"
         app:layout_anchor="@+id/recipe_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:scaleType="center"/>
 
 </android.support.design.widget.CoordinatorLayout>
