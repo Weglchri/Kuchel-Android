@@ -19,7 +19,7 @@ public class GlobalParamService {
             @Override
             protected Void doInBackground(Void... params) {
 
-                GlobalParamEntity gp = retrieveGlobalParam(globalParam.getKey());
+                GlobalParamEntity gp = DatabaseManager.getDatabaseReadOnly().globalParamDao().findByKey(globalParam.getKey());
                 if(gp==null){
                     DatabaseManager.getDatabase().globalParamDao().insert(globalParam);
                 }else{
@@ -31,7 +31,7 @@ public class GlobalParamService {
     }
 
 
-    public static GlobalParamEntity retrieveGlobalParam(String key) {
+    public GlobalParamEntity retrieveGlobalParam(String key) {
         return DatabaseManager.getDatabaseReadOnly().globalParamDao().findByKey(key);
     }
 }

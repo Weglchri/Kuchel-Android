@@ -36,7 +36,9 @@ public class ImageService {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 int code = response.code();
-
+                if(code==201){
+                    //todo load new from server and store to list activity
+                }
 
             }
 
