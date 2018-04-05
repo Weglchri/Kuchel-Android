@@ -31,7 +31,7 @@ public class GlobalParamService {
     }
 
 
-    public GlobalParamEntity retrieveGlobalParam(String key) {
+    public static GlobalParamEntity retrieveGlobalParam(String key) {
         return DatabaseManager.getDatabaseReadOnly().globalParamDao().findByKey(key);
     }
 }

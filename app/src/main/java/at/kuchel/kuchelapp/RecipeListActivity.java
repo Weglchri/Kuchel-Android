@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
@@ -65,7 +66,7 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
         //database related stuff
         DatabaseManager.getDatabase(getApplicationContext());
-        getApplicationContext().deleteDatabase("kuchel");
+//        getApplicationContext().deleteDatabase("kuchel");
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             mTwoPane = true;
@@ -73,7 +74,6 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
 
 //        UserService userService = new UserService();
 //        userService.loadUserProfileViaRest("bernhard", "pass");
-
 
         //try to use somehting like the "isOnline" method below
         //todo check if internet is ok and speed good - for now simulate db read or rest
@@ -199,8 +199,11 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             holder.mDurationView.setText(recipes.get(position).getDuration());
             holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
 
-            if (mImages.size() > position) {
-                holder.mImageView.setImageBitmap(mImages.get(position).getImage());
+            for (BitmapImage bitmapImage : mImages) {
+                for(Image image:recipes.get(position).getImages())
+                if (bitmapImage.getImageId().equals(image.getId())) {
+                    holder.mImageView.setImageBitmap(bitmapImage.getImage());
+                }
             }
 
             holder.itemView.setTag(recipes.get(position));
