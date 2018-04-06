@@ -33,17 +33,20 @@ public class LoginDialogFragment extends DialogFragment {
         final EditText username =(EditText) view.findViewById(R.id.username);
         final EditText password =(EditText) view.findViewById(R.id.password);
 
-        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+        builder
+                .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         LoginDialogFragment.this.getDialog().cancel();
                     }
                 })
+
                 .setPositiveButton("Anmelden", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         LoginDialogFragment.this.dialog = dialog;
                         userService.loadUserProfileViaRest(username.getText().toString(), password.getText().toString());
                     }
                 });
+
         // Create the AlertDialog object and return it
         return builder.create();
     }

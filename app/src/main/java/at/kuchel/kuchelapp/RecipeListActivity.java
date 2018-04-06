@@ -1,5 +1,6 @@
 package at.kuchel.kuchelapp;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import java.util.Objects;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
+import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
 import at.kuchel.kuchelapp.service.utils.DatabaseManager;
@@ -73,6 +76,26 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
         recipeServiceRest.retrieveRecipes();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override //options menu right hand side
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.login_button:
+                DialogFragment newFragment = LoginDialogFragment.newInstance();
+                newFragment.show(getFragmentManager(), "dialog");
+                return true;
+            case R.id.logout_button:
+                GlobalParamService.clearUserdata();
+                return true;
+            default:
+                return false;
+        }
+    }
 
     private void showRecipesInOverview() {
         View recyclerView = findViewById(R.id.recipe_list);

@@ -11,12 +11,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
+import at.kuchel.kuchelapp.model.GlobalParamEntity;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.UserService;
 import at.kuchel.kuchelapp.service.utils.DatabaseManager;
@@ -48,9 +50,15 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in, R.anim.nothing);
+                if(GlobalParamService.isUserSet()) {
+                    Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
+                    Bundle bundle = new Bundle();
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in, R.anim.nothing);
+                } else {
+                    Log.i("Meine Rezepte", "Nicht eingeloggt");
+                }
+
             }
         });
 

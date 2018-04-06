@@ -41,7 +41,6 @@ public class UserService {
                 } else {
                     Log.i("loaduserProfileViaRest", "Incorrect Credentials");
                     //todo return to activity with error
-
                 }
             }
 

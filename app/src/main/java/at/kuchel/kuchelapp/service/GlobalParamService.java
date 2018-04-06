@@ -28,7 +28,6 @@ public class GlobalParamService {
                 } else {
                     DatabaseManager.getDatabase().globalParamDao().update(globalParam);
                 }
-
                 return null;
             }
             @Override
