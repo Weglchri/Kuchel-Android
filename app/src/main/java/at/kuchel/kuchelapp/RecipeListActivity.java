@@ -62,17 +62,6 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
         toolbar.setTitle(getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        /*
-        drawer = (DrawerLayout) findViewById(R.id.activity_main_list);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        */
-
-
         //database related stuff
         DatabaseManager.getDatabase(getApplicationContext());
         //getApplicationContext().deleteDatabase("kuchel");
@@ -84,46 +73,9 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
 //        UserService userService = new UserService();
 //        userService.loadUserProfileViaRest("bernhard", "pass");
 
-
-        //try to use somehting like the "isOnline" method below
-        //todo check if internet is ok and speed good - for now simulate db read or rest
         recipeServiceRest.retrieveRecipes();
     }
 
-//    public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
-//        Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes.size()));
-//        this.recipes.addAll(recipes);
-//        showRecipesInOverview();
-//
-//        //todo load only not loaded until now
-//        recipeServiceDb.retrieveRecipes();
-//        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, DatabaseManager.getDatabase(getApplicationContext()));
-//    }
-
-//    public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {
-//        Log.i("retrieve_recipe_db", String.format("Retrieved %s recipes from db", recipesFromDb.size()));
-//        for (Recipe recipeDb : recipesFromDb) {
-//            boolean alreadyAdded = false;
-//            for (Recipe alreadyReturnedRecipe : this.recipes) {
-//                if (Objects.equals(alreadyReturnedRecipe.getId(), recipeDb.getId())) {
-//                    alreadyAdded = true;
-//                }
-//            }
-//            if (!alreadyAdded) {
-//                Log.i("retrieve_recipe_db_add", String.format("recipe with id %s is added from db to list", recipeDb.getId()));
-//                if (recipeDb.getImages().size() > 0)
-//                    recipeServiceDb.loadImages(recipeDb.getImages().get(0).getId());
-//                this.recipes.add(recipeDb);
-//            }
-//        }
-//        showRecipesInOverview();
-//    }
-
-//    public void retrievedImageBitmap(BitmapImage bitmapImage) {
-//        this.images.add(bitmapImage);
-//        View recyclerView = findViewById(R.id.recipe_list);
-//        setupRecyclerView((RecyclerView) recyclerView);
-//    }
 
     private void showRecipesInOverview() {
         View recyclerView = findViewById(R.id.recipe_list);

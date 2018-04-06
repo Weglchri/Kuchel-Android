@@ -114,13 +114,8 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
                 if (recipe.getImages().size() > 0) {
                     recipeServiceDb.loadImages(recipe.getImages().get(0).getId());
                 } else {
-                    //todo call direct
+                    handleImageResponse(null);
                 }
-
-//                arguments.putParcelable("recipe", recipe);
-//                RecipeDetailFragment fragment = new RecipeDetailFragment();
-//                fragment.setArguments(arguments);
-//                getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
             }
         }
     }
@@ -130,12 +125,14 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
         Bundle arguments = new Bundle();
         arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
 
-        BitmapDrawable background = new BitmapDrawable(getResources(), bitmapImage.getImage());
-        AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
-        barLayout.setBackground(background);
-
         RecipeDetailFragment fragment = new RecipeDetailFragment();
-        fragment.setImage(bitmapImage.getImage());
+        if (bitmapImage != null) {
+            BitmapDrawable background = new BitmapDrawable(getResources(), bitmapImage.getImage());
+            AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
+            barLayout.setBackground(background);
+            fragment.setImage(bitmapImage.getImage());
+
+        }
         fragment.setRecipe(recipe);
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
