@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.kuchel.kuchelapp.RecipeDetailFragment;
 import at.kuchel.kuchelapp.RecipeListActivity;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
@@ -22,10 +23,16 @@ import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 public class RecipeServiceDb {
 
     private RecipeListActivity recipeListActivity;
+    private RecipeDetailFragment recipeDetailFragment;
     private FileService fileService;
 
     public RecipeServiceDb(RecipeListActivity recipeListActivity) {
         this.recipeListActivity = recipeListActivity;
+        this.fileService = new FileService(recipeListActivity);
+    }
+
+    public RecipeServiceDb(RecipeDetailFragment recipeDetailFragment) {
+        this.recipeDetailFragment = recipeDetailFragment;
         this.fileService = new FileService(recipeListActivity);
     }
 
@@ -69,7 +76,12 @@ public class RecipeServiceDb {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                recipeListActivity.retrievedRecipesFromDatabase(recipes);
+                if(recipeListActivity==null && recipeDetailFragment!=null){
+                    recipeDetailFragment.handleRetrievedRecipesFromDb(recipes);
+                }else{
+                    recipeListActivity.retrievedRecipesFromDatabase(recipes);
+
+                }
             }
         }.execute();
     }

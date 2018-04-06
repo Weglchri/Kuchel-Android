@@ -1,20 +1,17 @@
 package at.kuchel.kuchelapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import at.kuchel.kuchelapp.api.Recipe;
-import at.kuchel.kuchelapp.controller.RecipeApi;
-import at.kuchel.kuchelapp.service.utils.ServiceGenerator;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import at.kuchel.kuchelapp.service.RecipeServiceDb;
 
 /**
  * A fragment representing a single Recipe detail screen.
@@ -29,16 +26,13 @@ public class RecipeDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-//    private DummyContent.RecipeItem mItem;
-    private Recipe recipe;
+    private Recipe recipe = new Recipe();
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+    private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
+
+
+    private String recipeId;
+
     public RecipeDetailFragment() {
     }
 
@@ -47,33 +41,26 @@ public class RecipeDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            handleAsyncCallAndRedirect(this.getActivity(), getArguments().getString(ARG_ITEM_ID));
+            recipeId = String.valueOf(getArguments().get(ARG_ITEM_ID));
+            recipeServiceDb.retrieveRecipes();
+
+//            handleAsyncCallAndRedirect(this.getActivity(), getArguments().getString(ARG_ITEM_ID));
         }
     }
 
-    private void handleAsyncCallAndRedirect(final FragmentActivity activity, String id) {
-        Call<Recipe> call = ServiceGenerator.createService(RecipeApi.class,false).getRecipe(id);
+    public void handleRetrievedRecipesFromDb(List<Recipe> recipes) {
+        //todo add method to service for only one recipe to load
+        for (Recipe recipe : recipes){
+            if(String.valueOf(recipe.getId()).endsWith(recipeId)){
+                Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe with id %s from db", recipe.getId()));
 
-        call.enqueue(new Callback<Recipe>() {
-            @Override
-            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
-                recipe = response.body();
-
-                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout_detailed);
+                //todo load only not loaded until now
+                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.getActivity().findViewById(R.id.toolbar_layout_detailed);
                 if (appBarLayout != null) {
                     appBarLayout.setTitle(recipe.getName());
                 }
-
-
-
-
             }
-
-            @Override
-            public void onFailure(Call<Recipe> call, Throwable t) {
-                // Log error here since request failed
-            }
-        });
+        }
     }
 
     @Override

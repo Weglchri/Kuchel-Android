@@ -6,11 +6,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +27,6 @@ import java.util.Objects;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
-import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
 import at.kuchel.kuchelapp.service.utils.DatabaseManager;
@@ -120,8 +117,6 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
                 this.recipes.add(recipeDb);
             }
         }
-
-        this.recipes.addAll(recipesFromDb);
         showRecipesInOverview();
     }
 
@@ -214,10 +209,10 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
             holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
 
             for (BitmapImage bitmapImage : mImages) {
-                for(Image image:recipes.get(position).getImages())
-                if (bitmapImage.getImageId().equals(image.getId())) {
-                    holder.mImageView.setImageBitmap(bitmapImage.getImage());
-                }
+                for (Image image : recipes.get(position).getImages())
+                    if (bitmapImage.getImageId().equals(image.getId())) {
+                        holder.mImageView.setImageBitmap(bitmapImage.getImage());
+                    }
             }
 
             holder.itemView.setTag(recipes.get(position));
