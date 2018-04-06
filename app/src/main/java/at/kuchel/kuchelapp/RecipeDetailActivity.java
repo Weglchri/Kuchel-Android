@@ -55,6 +55,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
         //
         // http://developer.android.com/guide/components/fragments.html
 
+        recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
 
         FloatingActionButton cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +129,10 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
     public void handleImageResponse(BitmapImage bitmapImage) {
         Bundle arguments = new Bundle();
         arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
+
+        BitmapDrawable background = new BitmapDrawable(getResources(), bitmapImage.getImage());
+        AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
+        barLayout.setBackground(background);
 
         RecipeDetailFragment fragment = new RecipeDetailFragment();
         fragment.setImage(bitmapImage.getImage());
