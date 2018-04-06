@@ -15,9 +15,9 @@ import at.kuchel.kuchelapp.Constants;
 public class PermissionHandler extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1800;
+    private static final int MY_PERMISSIONS_REQUEST_CALENDAR = 1300;
 
     public boolean askForPermissionCamera(Activity activity) {
-
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
                 //not granted to use the camera
@@ -33,6 +33,23 @@ public class PermissionHandler extends AppCompatActivity {
     }
 
 
+    public boolean askForPermissionCalendar(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
+                //not granted to use the camera
+            } else {
+                // request for permission to use the camera
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+            }
+        } else {
+            //permission is always granted
+            return true;
+        }
+        return false;
+    }
+
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -44,6 +61,8 @@ public class PermissionHandler extends AppCompatActivity {
                     // permission denied!
                 }
             }
+            case MY_PERMISSIONS_REQUEST_CALENDAR: {}
+            default: {}
         }
     }
 
