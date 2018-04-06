@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import at.kuchel.kuchelapp.RecipeListActivity;
+import at.kuchel.kuchelapp.AbstractRecipeActivity;
 
 /**
  * Created by bernhard on 24.03.2018.
@@ -22,14 +22,14 @@ public class FileService {
     private static final String IMAGES = "images";
     private static final String JPG = ".jpg";
     private static final String IMAGE = "image";
-    private final RecipeListActivity recipeListActivity;
+    private final AbstractRecipeActivity abstractRecipeActivity;
 
-    public FileService(RecipeListActivity recipeListActivity) {
-        this.recipeListActivity = recipeListActivity;
+    public FileService(AbstractRecipeActivity abstractRecipeActivity) {
+        this.abstractRecipeActivity = abstractRecipeActivity;
     }
 
     void saveToInternalStorage(Bitmap bitmapImage, String imageId) {
-        ContextWrapper cw = new ContextWrapper(recipeListActivity.getApplicationContext());
+        ContextWrapper cw = new ContextWrapper(abstractRecipeActivity.getApplicationContext());
         File directory = cw.getDir(IMAGES, Context.MODE_PRIVATE);
         File mypath = new File(directory, IMAGE + "_" + imageId + JPG);
 
@@ -50,7 +50,7 @@ public class FileService {
     }
 
     public Bitmap loadImageFromStorage(String imageId) {
-        ContextWrapper cw = new ContextWrapper(recipeListActivity.getApplicationContext());
+        ContextWrapper cw = new ContextWrapper(abstractRecipeActivity.getApplicationContext());
         File directory = cw.getDir(IMAGES, Context.MODE_PRIVATE);
 
         try {

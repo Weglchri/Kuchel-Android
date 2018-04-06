@@ -1,28 +1,22 @@
 package at.kuchel.kuchelapp;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
+import java.util.List;
+
+import at.kuchel.kuchelapp.api.Recipe;
+import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.ImageService;
+import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.utils.PermissionHandler;
 
 /**
@@ -31,13 +25,15 @@ import at.kuchel.kuchelapp.service.utils.PermissionHandler;
  * item details are presented side-by-side with a list of items
  * in a {@link RecipeListActivity}.
  */
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeDetailActivity extends AbstractRecipeActivity {
 
     private static final int CAMERA_REQUEST = 1888;
     private static final int MY_CAMERA_REQUEST_PERMISSION = 1800;
     private String recipeId;
     private Activity recipeListActivity;
     private final PermissionHandler permissionHandler = new PermissionHandler();
+    private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
+    private Recipe recipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,23 +55,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
         //
         // http://developer.android.com/guide/components/fragments.html
 
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
-            RecipeDetailFragment fragment = new RecipeDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
-            recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
-        }
 
         FloatingActionButton cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(permissionHandler.askForPermissionCamera(recipeListActivity) == true) {
+                if (permissionHandler.askForPermissionCamera(recipeListActivity) == true) {
                     Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(cameraIntent, CAMERA_REQUEST);
@@ -83,19 +69,21 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        recipeServiceDb.retrieveRecipes();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                ImageService imageService = new ImageService();
-                imageService.uploadImage(photo,recipeId);
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            ImageService imageService = new ImageService();
+            imageService.uploadImage(photo, recipeId);
 
-                //just background related
-                BitmapDrawable background = new BitmapDrawable(getResources(), photo);
-                AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
-                barLayout.setBackground(background);
-            }
+            //just background related
+            BitmapDrawable background = new BitmapDrawable(getResources(), photo);
+            AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
+            barLayout.setBackground(background);
+        }
 
     }
 
@@ -103,4 +91,50 @@ public class RecipeDetailActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
+    @Override
+    public void handleRecipesFromRest(List<Recipe> recipes) {
+
+    }
+
+    @Override
+    public void handleRecipesFromDb(List<Recipe> recipes) {
+
+        // Create the detail fragment and add it to the activity
+        // using a fragment transaction.
+//        Bundle arguments = new Bundle();
+//        arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
+        String recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
+
+
+        for (Recipe recipe : recipes) {
+            if (String.valueOf(recipe.getId()).equals(recipeId)) {
+                this.recipe = recipe;
+                if (recipe.getImages().size() > 0) {
+                    recipeServiceDb.loadImages(recipe.getImages().get(0).getId());
+                } else {
+                    //todo call direct
+                }
+
+//                arguments.putParcelable("recipe", recipe);
+//                RecipeDetailFragment fragment = new RecipeDetailFragment();
+//                fragment.setArguments(arguments);
+//                getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
+            }
+        }
+    }
+
+    @Override
+    public void handleImageResponse(BitmapImage bitmapImage) {
+        Bundle arguments = new Bundle();
+        arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
+        arguments.putParcelable("recipe", recipe);
+        arguments.putParcelable("bitmap", bitmapImage.getImage());
+
+
+        RecipeDetailFragment fragment = new RecipeDetailFragment();
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
+    }
 }
+

@@ -27,6 +27,11 @@ public class GlobalParamService {
                 }
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
         }.execute();
     }
 

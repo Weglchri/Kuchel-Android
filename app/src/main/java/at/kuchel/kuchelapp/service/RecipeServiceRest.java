@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import at.kuchel.kuchelapp.RecipeListActivity;
+import at.kuchel.kuchelapp.AbstractRecipeActivity;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
@@ -27,15 +27,14 @@ import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.LAST_SYNC_DATE;
 /**
  * Created by bernhard on 23.03.2018.
  */
+public class RecipeServiceRest { //implements Observable
 
-public class RecipeServiceRest {
-
-    private RecipeListActivity recipeListActivity;
+    private AbstractRecipeActivity abstractRecipeActivity;
     private FileService fileService;
 
-    public RecipeServiceRest(RecipeListActivity recipeListActivity) {
-        this.recipeListActivity = recipeListActivity;
-        fileService = new FileService(recipeListActivity);
+    public RecipeServiceRest(AbstractRecipeActivity abstractRecipeActivity) {
+        this.abstractRecipeActivity = abstractRecipeActivity;
+        fileService = new FileService(abstractRecipeActivity);
     }
 
     public void retrieveRecipes() {
@@ -43,9 +42,9 @@ public class RecipeServiceRest {
         GlobalParamEntity lastSyncDate = GlobalParamService.retrieveGlobalParam(LAST_SYNC_DATE);
         Call<List<Recipe>> call;
         if (lastSyncDate != null) {
-            call = ServiceGenerator.createService(RecipeApi.class,true).getRecipes(LastSyncMapper.map(lastSyncDate));
+            call = ServiceGenerator.createService(RecipeApi.class, true).getRecipes(LastSyncMapper.map(lastSyncDate));
         } else {
-            call = ServiceGenerator.createService(RecipeApi.class,true).getRecipes();
+            call = ServiceGenerator.createService(RecipeApi.class, true).getRecipes();
         }
 
 
@@ -53,7 +52,7 @@ public class RecipeServiceRest {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 List<Recipe> recipes = response.body();
-                recipeListActivity.handleRetrievedRecipesFromRest(recipes);
+                abstractRecipeActivity.handleRecipesFromRest(recipes);
                 GlobalParamService.storeGlobalParam(new GlobalParamBuilder().setKey(LAST_SYNC_DATE)
                         .setValue(String.valueOf(new Date().getTime())).build());
                 for (Recipe recipe : recipes) {
@@ -67,14 +66,14 @@ public class RecipeServiceRest {
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                Log.i("no_connection","Could not establish connection - try to load from db");
-                recipeListActivity.handleRetrievedRecipesFromRest(Collections.<Recipe>emptyList());
+                Log.i("no_connection", "Could not establish connection - try to load from db");
+                abstractRecipeActivity.handleRecipesFromRest(Collections.<Recipe>emptyList());
             }
         });
     }
 
     private void retrieveImagesFromRestAndStoreToFileSystem(Long recipeId, String imageId) {
-        Call<Image> call = ServiceGenerator.createService(ImageApi.class,false).getImage(String.valueOf(recipeId), imageId);
+        Call<Image> call = ServiceGenerator.createService(ImageApi.class, false).getImage(String.valueOf(recipeId), imageId);
 
         call.enqueue(new Callback<Image>() {
             @Override
@@ -90,8 +89,10 @@ public class RecipeServiceRest {
                         fileService.saveToInternalStorage(bitmap, image.getId());
 
                         // 3. return bitmap with imageId to refresh the right element
-                        recipeListActivity.retrievedImageBitmap(new BitmapImage(image.getId(), bitmap));
+                        abstractRecipeActivity.handleImageResponse(new BitmapImage(image.getId(), bitmap));
                     }
+                } else {
+                    abstractRecipeActivity.handleImageResponse(null);
                 }
             }
 

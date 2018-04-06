@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,7 +38,7 @@ import at.kuchel.kuchelapp.service.utils.DatabaseManager;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RecipeListActivity extends AbstractRecipeActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static RecipeListActivity mInstance;
     private boolean mTwoPane;
@@ -91,40 +90,40 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
         recipeServiceRest.retrieveRecipes();
     }
 
-    public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
-        Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes.size()));
-        this.recipes.addAll(recipes);
-        showRecipesInOverview();
+//    public void handleRetrievedRecipesFromRest(List<Recipe> recipes) {
+//        Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes.size()));
+//        this.recipes.addAll(recipes);
+//        showRecipesInOverview();
+//
+//        //todo load only not loaded until now
+//        recipeServiceDb.retrieveRecipes();
+//        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, DatabaseManager.getDatabase(getApplicationContext()));
+//    }
 
-        //todo load only not loaded until now
-        recipeServiceDb.retrieveRecipes();
-        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, DatabaseManager.getDatabase(getApplicationContext()));
-    }
+//    public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {
+//        Log.i("retrieve_recipe_db", String.format("Retrieved %s recipes from db", recipesFromDb.size()));
+//        for (Recipe recipeDb : recipesFromDb) {
+//            boolean alreadyAdded = false;
+//            for (Recipe alreadyReturnedRecipe : this.recipes) {
+//                if (Objects.equals(alreadyReturnedRecipe.getId(), recipeDb.getId())) {
+//                    alreadyAdded = true;
+//                }
+//            }
+//            if (!alreadyAdded) {
+//                Log.i("retrieve_recipe_db_add", String.format("recipe with id %s is added from db to list", recipeDb.getId()));
+//                if (recipeDb.getImages().size() > 0)
+//                    recipeServiceDb.loadImages(recipeDb.getImages().get(0).getId());
+//                this.recipes.add(recipeDb);
+//            }
+//        }
+//        showRecipesInOverview();
+//    }
 
-    public void retrievedRecipesFromDatabase(List<Recipe> recipesFromDb) {
-        Log.i("retrieve_recipe_db", String.format("Retrieved %s recipes from db", recipesFromDb.size()));
-        for (Recipe recipeDb : recipesFromDb) {
-            boolean alreadyAdded = false;
-            for (Recipe alreadyReturnedRecipe : this.recipes) {
-                if (Objects.equals(alreadyReturnedRecipe.getId(), recipeDb.getId())) {
-                    alreadyAdded = true;
-                }
-            }
-            if (!alreadyAdded) {
-                Log.i("retrieve_recipe_db_add", String.format("recipe with id %s is added from db to list", recipeDb.getId()));
-                if (recipeDb.getImages().size() > 0)
-                    recipeServiceDb.loadImages(recipeDb.getImages().get(0).getId());
-                this.recipes.add(recipeDb);
-            }
-        }
-        showRecipesInOverview();
-    }
-
-    public void retrievedImageBitmap(BitmapImage bitmapImage) {
-        this.images.add(bitmapImage);
-        View recyclerView = findViewById(R.id.recipe_list);
-        setupRecyclerView((RecyclerView) recyclerView);
-    }
+//    public void retrievedImageBitmap(BitmapImage bitmapImage) {
+//        this.images.add(bitmapImage);
+//        View recyclerView = findViewById(R.id.recipe_list);
+//        setupRecyclerView((RecyclerView) recyclerView);
+//    }
 
     private void showRecipesInOverview() {
         View recyclerView = findViewById(R.id.recipe_list);
@@ -157,6 +156,46 @@ public class RecipeListActivity extends AppCompatActivity implements NavigationV
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void handleRecipesFromRest(List<Recipe> recipes) {
+        Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes.size()));
+        this.recipes.addAll(recipes);
+        showRecipesInOverview();
+
+        //todo load only not loaded until now
+        recipeServiceDb.retrieveRecipes();
+        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, DatabaseManager.getDatabase(getApplicationContext()));
+    }
+
+    @Override
+    public void handleRecipesFromDb(List<Recipe> recipes) {
+        Log.i("retrieve_recipe_db", String.format("Retrieved %s recipes from db", recipes.size()));
+        for (Recipe recipeDb : recipes) {
+            boolean alreadyAdded = false;
+            for (Recipe alreadyReturnedRecipe : this.recipes) {
+                if (Objects.equals(alreadyReturnedRecipe.getId(), recipeDb.getId())) {
+                    alreadyAdded = true;
+                }
+            }
+            if (!alreadyAdded) {
+                Log.i("retrieve_recipe_db_add", String.format("recipe with id %s is added from db to list", recipeDb.getId()));
+                if (recipeDb.getImages().size() > 0)
+                    recipeServiceDb.loadImages(recipeDb.getImages().get(0).getId());
+                this.recipes.add(recipeDb);
+            }
+        }
+        showRecipesInOverview();
+    }
+
+    @Override
+    public void handleImageResponse(BitmapImage bitmapImage) {
+        if(bitmapImage!=null){
+            this.images.add(bitmapImage);
+            View recyclerView = findViewById(R.id.recipe_list);
+            setupRecyclerView((RecyclerView) recyclerView);
+        }
     }
 
     public static class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
