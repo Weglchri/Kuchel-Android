@@ -25,6 +25,7 @@ public class RecipeDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
 
     private Recipe recipe;
+    private Bitmap image;
 
     public RecipeDetailFragment() {
     }
@@ -37,16 +38,7 @@ public class RecipeDetailFragment extends Fragment {
             String recipeId = String.valueOf(getArguments().get(ARG_ITEM_ID));
 
         }
-        Recipe recipe = new Recipe();
-        if (getArguments().containsKey("recipe")) {
-            recipe = (Recipe) getArguments().get("recipe");
 
-        }
-        Bitmap bitmap = null;
-        if (getArguments().containsKey("bitmap")) {
-            bitmap = (Bitmap) getArguments().get("bitmap");
-
-        }
 
 
         Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe with id %s from db", recipe.getId()));
@@ -70,5 +62,17 @@ public class RecipeDetailFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 }

@@ -128,11 +128,10 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
     public void handleImageResponse(BitmapImage bitmapImage) {
         Bundle arguments = new Bundle();
         arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
-        arguments.putParcelable("recipe", recipe);
-        arguments.putParcelable("bitmap", bitmapImage.getImage());
-
 
         RecipeDetailFragment fragment = new RecipeDetailFragment();
+        fragment.setImage(bitmapImage.getImage());
+        fragment.setRecipe(recipe);
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
     }
