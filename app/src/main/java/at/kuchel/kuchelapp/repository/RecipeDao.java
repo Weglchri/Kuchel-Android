@@ -86,9 +86,11 @@ public abstract class RecipeDao {
     }
 
 
+    @Transaction
     @Query("SELECT * FROM RecipeEntity")
     abstract List<RecipeInstruction> _loadRecipeInstructions();
 
+    @Transaction
     @Query("SELECT * FROM RecipeEntity")
     abstract List<RecipeIngredient> _loadRecipeIngredients();
 
@@ -98,9 +100,11 @@ public abstract class RecipeDao {
     @Query("SELECT * FROM RecipeEntity WHERE id = :id ")
     public abstract RecipeEntity findById(String id);
 
+    @Transaction
     @Query("SELECT * FROM RecipeEntity WHERE id = :id ")
     public abstract RecipeInstruction findRecipeInstructionByRecipeId(String id);
 
+    @Transaction
     @Query("SELECT * FROM RecipeEntity WHERE id = :id ")
     public abstract RecipeIngredient findRecipeIngredientByRecipeId(String id);
 

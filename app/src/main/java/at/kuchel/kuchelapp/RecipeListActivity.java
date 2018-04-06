@@ -62,9 +62,6 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
         toolbar.setTitle(getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //database related stuff
-        DatabaseManager.getDatabase(getApplicationContext());
-        //getApplicationContext().deleteDatabase("kuchel");
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             mTwoPane = true;
@@ -118,7 +115,7 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
 
         //todo load only not loaded until now
         recipeServiceDb.retrieveRecipes();
-        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes, DatabaseManager.getDatabase(getApplicationContext()));
+        recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes);
     }
 
     @Override

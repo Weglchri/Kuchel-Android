@@ -30,26 +30,26 @@ public class RecipeServiceDb {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void storeNewAndUpdateExistingRecipes(final List<Recipe> recipes, final KuchelDatabase database) {
+    public void storeNewAndUpdateExistingRecipes(final List<Recipe> recipes) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 final List<Recipe> mustUpdate = new ArrayList<>();
                 final List<Recipe> mustCreate = new ArrayList<>();
 
-                List<Long> recipeIds = database.recipeDao().getApiIds();
+                List<Long> recipeIds = DatabaseManager.getDatabase().recipeDao().getApiIds();
 
                 for (Recipe recipe : recipes) {
                     if (!recipeIds.contains(recipe.getId())) {
                         mustCreate.add(recipe);
-                    } else if (recipe.getModifiedDate().after(database.recipeDao().findById(String.valueOf(recipe.getId())).getModifiedDate())) {
+                    } else if (recipe.getModifiedDate().after(DatabaseManager.getDatabase().recipeDao().findById(String.valueOf(recipe.getId())).getModifiedDate())) {
                         mustUpdate.add(recipe);
                     } else {
                         Log.i("no_update", "no update needed");
                     }
                 }
-                storeRecipes(mustCreate, database);
-                updateRecipes(mustUpdate, database);
+                storeRecipes(mustCreate, DatabaseManager.getDatabase());
+                updateRecipes(mustUpdate, DatabaseManager.getDatabase());
                 return null;
             }
 

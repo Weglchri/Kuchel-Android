@@ -3,6 +3,7 @@ package at.kuchel.kuchelapp;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,16 +19,21 @@ import android.widget.Button;
 import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.UserService;
+import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 
 
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DatabaseManager.initDatabase(getApplicationContext());
+        //getApplicationContext().deleteDatabase("kuchel");
+
 
         Button button_recipes = (Button)findViewById(R.id.button_recipes);
         button_recipes.setOnClickListener(new View.OnClickListener() {

@@ -35,12 +35,11 @@ public class UserService {
                     GlobalParamService.storeGlobalParam(new GlobalParamBuilder()
                             .setKey(PASSWORD).setValue(password).build());
 
-                    Log.i("UserService ", "Right Credentials");
+                    Log.i("UserService ", "Correct Credentials");
                     System.out.println("Profile: " + profile);
 
                 } else {
-
-                    Log.i("Return", "With Error");
+                    Log.i("loaduserProfileViaRest", "Incorrect Credentials");
                     //todo return to activity with error
 
                 }

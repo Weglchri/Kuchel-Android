@@ -29,10 +29,9 @@ public class DatabaseManager {
         return kuchelReadOnly;
     }
 
-    public static KuchelDatabase getDatabase(Context context) {
+    public static void initDatabase(Context context) {
         if (mInstance == null) {
             mInstance = new DatabaseManager(context);
         }
-        return kuchel;
     }
 }
