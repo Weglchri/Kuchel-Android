@@ -48,21 +48,6 @@
             app:layout_anchor="@+id/textView"
             app:layout_anchorGravity="bottom|center" />
 
-        <Button
-            android:id="@+id/button_create_recipes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="@android:color/holo_green_light"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:text="@string/newrecipe"
-            app:layout_anchor="@+id/textView"
-            app:layout_anchorGravity="bottom|center" />
-
     </LinearLayout>
 
     <TextView

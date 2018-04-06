@@ -1,10 +1,7 @@
 package at.kuchel.kuchelapp;
 
-import android.content.Context;
+import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,24 +14,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-import java.io.IOException;
+import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
+import at.kuchel.kuchelapp.service.GlobalParamService;
+import at.kuchel.kuchelapp.service.UserService;
 
 
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
-    private MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if(savedInstanceState == null) {
-            //onSaveInstanceState();
-        }
 
         Button button_recipes = (Button)findViewById(R.id.button_recipes);
         button_recipes.setOnClickListener(new View.OnClickListener() {
@@ -68,15 +61,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
     }
 
-    /*                  user handling relevant
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString("Wegl", user);
-        Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
-    */
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -85,9 +69,17 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
     @Override //options menu right hand side
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        /* todo: do action */
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.login_button:
+                DialogFragment newFragment = LoginDialogFragment.newInstance();
+                newFragment.show(getFragmentManager(), "dialog");
+                return true;
+            case R.id.logout_button:
+                GlobalParamService.clearUserdata();
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override //drawer menu left hand side

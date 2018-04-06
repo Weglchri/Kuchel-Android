@@ -17,4 +17,7 @@
     <string name="menu">Kuchel Menu</string>
     <string name="welcome">Willkommen bei Kuchel</string>
     <string name="alle_rezepte">Alle Rezepte</string>
+
+    <string name="username">Benutzername</string>
+    <string name="password">Password</string>
 </resources>

@@ -4,20 +4,12 @@
     tools:context="com.example.wegls.myapplication.MainActivity">
 
     <item
-        android:id="@+id/action_settings"
-        android:title="Placeholder 1"
+        android:id="@+id/login_button"
+        android:title="Login"
         app:showAsAction="never" />
-
-    <item android:id="@+id/courses"
-        android:title="Placeholder 2"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/scores"
-        android:title="Placeholder 3"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/handicap"
-        android:title="Placeholder 4"
+    <item
+        android:id="@+id/logout_button"
+        android:title="Logout"
         app:showAsAction="never" />
 
     <!--  template for further use

@@ -22,12 +22,14 @@ public class GlobalParamService {
             @Override
             protected Void doInBackground(Void... params) {
 
+                /* todo: absturz bei insert/update
                 GlobalParamEntity gp = DatabaseManager.getDatabaseReadOnly().globalParamDao().findByKey(globalParam.getKey());
                 if (gp == null) {
                     DatabaseManager.getDatabase().globalParamDao().insert(globalParam);
                 } else {
                     DatabaseManager.getDatabase().globalParamDao().update(globalParam);
                 }
+                */
                 return null;
             }
 
@@ -48,8 +50,19 @@ public class GlobalParamService {
     }
 
     public static void clearUserdata() {
-        DatabaseManager.getDatabase().globalParamDao().deleteByKey(USERNAME);
-        DatabaseManager.getDatabase().globalParamDao().deleteByKey(PASSWORD);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                DatabaseManager.getDatabase().globalParamDao().deleteByKey(USERNAME);
+                DatabaseManager.getDatabase().globalParamDao().deleteByKey(PASSWORD);
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+
+        }.execute();
     }
 }
 

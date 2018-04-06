@@ -35,7 +35,8 @@ public interface GlobalParamDao {
     @Delete
     void delete(GlobalParamEntity globalParamEntity);
 
-    @Delete @Query("DELETE FROM GlobalParamEntity WHERE `key` LIKE :key")
+    @Query("DELETE FROM GlobalParamEntity WHERE `key` LIKE :key")
     void deleteByKey(String key);
+
 }
 
