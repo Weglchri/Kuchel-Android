@@ -31,7 +31,6 @@ import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
-import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -132,7 +131,7 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
 
     @Override
     public void handleRecipesFromRest(List<Recipe> recipes) {
-        Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes.size()));
+        Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes == null ? "0" : recipes.size()));
         this.recipes.addAll(recipes);
         showRecipesInOverview();
 
@@ -163,7 +162,7 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
 
     @Override
     public void handleImageResponse(BitmapImage bitmapImage) {
-        if(bitmapImage!=null){
+        if (bitmapImage != null) {
             this.images.add(bitmapImage);
             View recyclerView = findViewById(R.id.recipe_list);
             setupRecyclerView((RecyclerView) recyclerView);
