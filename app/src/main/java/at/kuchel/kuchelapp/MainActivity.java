@@ -3,9 +3,11 @@ package at.kuchel.kuchelapp;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,8 +25,11 @@ import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.UserService;
 import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 
+import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
+
 
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+
 
     private DrawerLayout drawer;
 
@@ -37,11 +42,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         //getApplicationContext().deleteDatabase("kuchel");
 
 
+
         Button button_recipes = (Button)findViewById(R.id.button_recipes);
         button_recipes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
+                intent.putExtra("title", "Alle Rezepte");
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             }
@@ -52,11 +59,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             public void onClick(View view) {
                 if(GlobalParamService.isUserSet()) {
                     Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                    Bundle bundle = new Bundle();
+                    intent.putExtra("title",  "Meine Rezepte");
+                    intent.putExtra("username", GlobalParamService.retrieveGlobalParam(USERNAME).getValue());
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in, R.anim.nothing);
                 } else {
                     Log.i("Meine Rezepte", "Nicht eingeloggt");
+                    Snackbar.make(view, "Loggen Sie sich ein um ihre Rezepte zu sehen!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
 
             }
@@ -84,13 +93,41 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     @Override //options menu right hand side
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.login_button:
                 DialogFragment newFragment = LoginDialogFragment.newInstance();
                 newFragment.show(getFragmentManager(), "dialog");
                 return true;
+
             case R.id.logout_button:
-                GlobalParamService.clearUserdata();
+                if (GlobalParamService.isUserSet()) {
+                    GlobalParamService.clearUserdata();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (GlobalParamService.isUserSet()) {
+                                Snackbar
+                                        .make(findViewById(R.id.activity_main), "Unexpected logout error occured", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null)
+                                        .show();
+                            } else {
+                                Snackbar
+                                        .make(findViewById(R.id.activity_main), "Erfolgreich ausgeloggt", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null)
+                                        .show();
+                            }
+                        }
+                    }, 1000);
+
+                } else {
+                    Snackbar
+                            .make(findViewById(R.id.activity_main), "Nicht eingeloggt", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show();
+                }
                 return true;
+
             default:
                 return false;
         }

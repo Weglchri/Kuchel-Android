@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +32,8 @@ import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
 
+import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
+
 /**
  * An activity representing a list of Recipes. This activity
  * has different presentations for handset and tablet-size devices. On
@@ -40,61 +42,94 @@ import at.kuchel.kuchelapp.service.RecipeServiceRest;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeListActivity extends AbstractRecipeActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RecipeListActivity extends AbstractRecipeActivity {
 
-    private static RecipeListActivity mInstance;
     private boolean mTwoPane;
     private List<Recipe> recipes = new ArrayList<>();
-
     public static final String KUCHEL = "kuchel";
+    private String recipeCreator;
+    private String pageTitle;
+
     private RecipeServiceDb recipeServiceDb = new RecipeServiceDb(this);
     private RecipeServiceRest recipeServiceRest = new RecipeServiceRest(this);
     private List<BitmapImage> images = new ArrayList<>();
 
-    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_recipe_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        //if user is set it comes from ALLRECIPES or MYRECIPES list
+        if (getIntent().getExtras() != null) {
+            Log.i("RecipeListActivity", "getExtras");
+            this.recipeCreator = getIntent().getExtras().getString("username");
+            this.pageTitle = getIntent().getExtras().getString("title");
+        }
+
+        setTitle(pageTitle);
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             mTwoPane = true;
         }
-
-//        UserService userService = new UserService();
-//        userService.loadUserProfileViaRest("bernhard", "pass");
-
         recipeServiceRest.retrieveRecipes();
     }
 
+
+    //right hand side navigation menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
-    @Override //options menu right hand side
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.login_button:
                 DialogFragment newFragment = LoginDialogFragment.newInstance();
                 newFragment.show(getFragmentManager(), "dialog");
                 return true;
+
             case R.id.logout_button:
-                GlobalParamService.clearUserdata();
+                if (GlobalParamService.isUserSet()) {
+                    GlobalParamService.clearUserdata();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (GlobalParamService.isUserSet()) {
+                                Snackbar
+                                        .make(findViewById(R.id.activity_recipe_list), "Unexpected logout error occured", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null)
+                                        .show();
+                            } else {
+                                Snackbar
+                                        .make(findViewById(R.id.activity_recipe_list), "Erfolgreich ausgeloggt", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null)
+                                        .show();
+                            }
+                        }
+                    }, 1000);
+
+                } else {
+                    Snackbar
+                            .make(findViewById(R.id.activity_recipe_list), "Nicht eingeloggt", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show();
+                }
                 return true;
+
             default:
                 return false;
         }
     }
+
 
     private void showRecipesInOverview() {
         View recyclerView = findViewById(R.id.recipe_list);
@@ -104,29 +139,6 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, recipes, mTwoPane, images));
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.nav_dashboard) {  //go back to mainpage
-            startActivity(new Intent(this, MainActivity.class));
-            overridePendingTransition(R.anim.slide_in, R.anim.nothing);
-            drawer.closeDrawers();
-            return true;
-        }
-        if (id == R.id.nav_recipes) {  //go to all recipes
-            drawer.closeDrawers();
-            return true;
-        }
-        if (id == R.id.nav_myrecipes) {  //go to my recipes
-            startActivity(new Intent(this, RecipeListActivity.class));
-            drawer.closeDrawers();
-            return true;
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
@@ -154,7 +166,10 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
                 Log.i("retrieve_recipe_db_add", String.format("recipe with id %s is added from db to list", recipeDb.getId()));
                 if (recipeDb.getImages().size() > 0)
                     recipeServiceDb.loadImages(recipeDb.getImages().get(0).getId());
-                this.recipes.add(recipeDb);
+
+                if (recipeCreator == null || recipeCreator.equals(recipeDb.getUsername())) {
+                    this.recipes.add(recipeDb);
+                }
             }
         }
         showRecipesInOverview();
@@ -169,101 +184,101 @@ public class RecipeListActivity extends AbstractRecipeActivity implements Naviga
         }
     }
 
-    public static class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final RecipeListActivity mParentActivity;
-        private final List<Recipe> recipes;
-        private List<BitmapImage> mImages;
-        private final boolean mTwoPane;
+    private final RecipeListActivity mParentActivity;
+    private final List<Recipe> recipes;
+    private List<BitmapImage> mImages;
+    private final boolean mTwoPane;
 
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Recipe item = (Recipe) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
-                    RecipeDetailFragment fragment = new RecipeDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in, R.anim.nothing)
-                            .replace(R.id.recipe_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, RecipeDetailActivity.class);
-                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
-                    context.startActivity(intent);
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Recipe item = (Recipe) view.getTag();
+            if (mTwoPane) {
+                Bundle arguments = new Bundle();
+                arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
+                RecipeDetailFragment fragment = new RecipeDetailFragment();
+                fragment.setArguments(arguments);
+                mParentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.recipe_detail_container, fragment)
+                        .commit();
+            } else {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, RecipeDetailActivity.class);
+                intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
+                startActivity(intent);
+            }
+        }
+    };
+
+    SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane, List<BitmapImage> images) {
+        this.recipes = recipes;
+        mParentActivity = parent;
+        mTwoPane = twoPane;
+        mImages = images;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_content, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
+        holder.mNameView.setText(recipes.get(position).getName());
+        holder.mDurationView.setText(recipes.get(position).getDuration());
+        holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
+
+        for (BitmapImage bitmapImage : mImages) {
+            for (Image image : recipes.get(position).getImages())
+                if (bitmapImage.getImageId().equals(image.getId())) {
+                    holder.mImageView.setImageBitmap(bitmapImage.getImage());
                 }
-            }
-        };
-
-        SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane, List<BitmapImage> images) {
-            this.recipes = recipes;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
-            mImages = images;
         }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_content, parent, false);
-            return new ViewHolder(view);
-        }
+        holder.itemView.setTag(recipes.get(position));
+        holder.itemView.setOnClickListener(mOnClickListener);
+    }
 
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
-            holder.mNameView.setText(recipes.get(position).getName());
-            holder.mDurationView.setText(recipes.get(position).getDuration());
-            holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
+    @Override
+    public int getItemCount() {
+        return recipes.size();
+    }
 
-            for (BitmapImage bitmapImage : mImages) {
-                for (Image image : recipes.get(position).getImages())
-                    if (bitmapImage.getImageId().equals(image.getId())) {
-                        holder.mImageView.setImageBitmap(bitmapImage.getImage());
-                    }
-            }
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-            holder.itemView.setTag(recipes.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
-        }
+        final TextView mIdView;
+        final TextView mNameView;
+        final TextView mDurationView;
+        final TextView mDifficultyView;
+        final ImageView mImageView;
 
-        @Override
-        public int getItemCount() {
-            return recipes.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            final TextView mIdView;
-            final TextView mNameView;
-            final TextView mDurationView;
-            final TextView mDifficultyView;
-            final ImageView mImageView;
-
-            ViewHolder(View view) {
-                super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mNameView = (TextView) view.findViewById(R.id.content_text);
-                mDurationView = (TextView) view.findViewById(R.id.duration_text);
-                mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
-                mImageView = (ImageView) view.findViewById(R.id.imageView);
-            }
+        ViewHolder(View view) {
+            super(view);
+            mIdView = (TextView) view.findViewById(R.id.id_text);
+            mNameView = (TextView) view.findViewById(R.id.content_text);
+            mDurationView = (TextView) view.findViewById(R.id.duration_text);
+            mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
+            mImageView = (ImageView) view.findViewById(R.id.imageView);
         }
     }
+
+}
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
         overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
+    /*
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
+    */
 }

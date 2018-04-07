@@ -2,6 +2,7 @@ package at.kuchel.kuchelapp.service;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.provider.Settings;
 
 import at.kuchel.kuchelapp.model.GlobalParamEntity;
 import at.kuchel.kuchelapp.service.utils.DatabaseManager;
@@ -36,7 +37,6 @@ public class GlobalParamService {
             }
         }.execute();
     }
-
 
     public static GlobalParamEntity retrieveGlobalParam(String key) {
         return DatabaseManager.getDatabaseReadOnly().globalParamDao().findByKey(key);

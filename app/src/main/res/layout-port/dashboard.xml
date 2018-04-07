@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="385dp"
+        android:layout_marginTop="420dp"
         android:orientation="vertical"
         app:layout_anchor="@+id/textView"
         app:layout_anchorGravity="bottom|center">
@@ -27,8 +27,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@android:color/holo_green_light"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
+            android:paddingBottom="30dp"
+            android:paddingTop="30dp"
             android:text="@string/recipes"
             app:layout_anchor="@+id/textView"
             app:layout_anchorGravity="bottom|center" />
@@ -42,8 +42,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@android:color/holo_green_light"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
+            android:paddingBottom="30dp"
+            android:paddingTop="30dp"
             android:text="@string/myrecipes"
             app:layout_anchor="@+id/textView"
             app:layout_anchorGravity="bottom|center" />
@@ -60,7 +60,7 @@
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle.Inverse"
-        android:textSize="38sp"
+        android:textSize="50sp"
         android:textStyle="italic"
         app:layout_anchor="@+id/imageView"
         app:layout_anchorGravity="bottom|center" />
