@@ -45,7 +45,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detailed);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
 

@@ -62,7 +62,11 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         //if user is set it comes from ALLRECIPES or MYRECIPES list
         if (getIntent().getExtras() != null) {
@@ -125,8 +129,11 @@ public class RecipeListActivity extends AbstractRecipeActivity {
                 }
                 return true;
 
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             default:
-                return false;
+                return super.onOptionsItemSelected(item);
         }
     }
 

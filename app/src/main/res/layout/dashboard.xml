@@ -77,8 +77,6 @@
             android:text="@string/myrecipes"
             app:layout_anchor="@+id/textView"
             app:layout_anchorGravity="bottom|center" />
-
-
     </LinearLayout>
 
     <TextView
@@ -99,13 +97,8 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="Kuchel_welcome_image"
-        app:srcCompat="@drawable/lunch" />
-
-    <include
-        layout="@layout/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="100dp"
+        android:contentDescription="@string/welcomeImage"
+    app:srcCompat="@mipmap/lunchy" />
 
 </android.support.design.widget.CoordinatorLayout>

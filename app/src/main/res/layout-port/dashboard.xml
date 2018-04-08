@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="270dp"
+        android:layout_marginTop="260dp"
         android:fontFamily="@font/orangejuice"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/welcome"
@@ -67,10 +67,11 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="500dp"
+        android:layout_height="240dp"
+        android:layout_gravity="center_horizontal"
         android:contentDescription="Kuchel_welcome_image"
-        app:srcCompat="@drawable/lunch" />
+        app:srcCompat="@mipmap/lunchy" />
 
     <include
         layout="@layout/toolbar_main"

@@ -16,6 +16,7 @@
     <string name="placeholder">Platzhalter</string>
     <string name="menu">Kuchel Menu</string>
     <string name="welcome">Willkommen bei Kuchel</string>
+    <string name="welcomeImage">KuchelImage</string>
     <string name="alle_rezepte">Alle Rezepte</string>
 
     <string name="username">Benutzername</string>

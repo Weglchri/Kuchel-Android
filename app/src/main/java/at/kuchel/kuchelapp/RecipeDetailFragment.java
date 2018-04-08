@@ -47,7 +47,6 @@ public class RecipeDetailFragment extends Fragment {
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.getActivity().findViewById(R.id.toolbar_layout_detailed);
         if (appBarLayout != null) {
             appBarLayout.setTitle(recipe.getName());
-
         }
     }
 
