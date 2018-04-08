@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         //getApplicationContext().deleteDatabase("kuchel");
 
 
-
         Button button_recipes = (Button)findViewById(R.id.button_recipes);
         button_recipes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,23 +136,28 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_dashboard) {  //go back to mainpage
-            drawer.closeDrawers();
-            return true;
+            drawer.closeDrawer(GravityCompat.START);
         }
         if (id == R.id.nav_recipes) {  //go to all recipes
-            startActivity(new Intent(this, RecipeListActivity.class));
+            Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
+            intent.putExtra("title", "Alle Rezepte");
+            startActivity(intent);
             overridePendingTransition(R.anim.slide_in, R.anim.nothing);
-            drawer.closeDrawers();
-            return true;
         }
         if (id == R.id.nav_myrecipes) {  //go to my recipes
-            startActivity(new Intent(this, RecipeListActivity.class));
-            drawer.closeDrawers();
-            return true;
+            if(GlobalParamService.isUserSet()) {
+                Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
+                intent.putExtra("title",  "Meine Rezepte");
+                intent.putExtra("username", GlobalParamService.retrieveGlobalParam(USERNAME).getValue());
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in, R.anim.nothing);
+            } else {
+                Log.i("Meine Rezepte", "Nicht eingeloggt");
+                Snackbar.make(findViewById(R.id.activity_main), "Loggen Sie sich ein um ihre Rezepte zu sehen!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-        drawer.closeDrawer(GravityCompat.START);
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+        //drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
