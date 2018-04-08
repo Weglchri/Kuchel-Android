@@ -1,14 +1,18 @@
 package at.kuchel.kuchelapp;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.List;
@@ -16,6 +20,7 @@ import java.util.Objects;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
+import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.ImageService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.utils.PermissionHandler;
@@ -47,6 +52,9 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
         setSupportActionBar(toolbar);
         //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
 
         FloatingActionButton cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
@@ -62,6 +70,18 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             }
         });
         recipeServiceDb.retrieveRecipes();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -119,5 +139,9 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
     }
+
+
+
+
 }
 
