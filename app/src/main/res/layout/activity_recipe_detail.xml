@@ -19,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
@@ -32,6 +31,7 @@
         app:layout_anchor="@+id/recipe_detail_container"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@android:drawable/ic_menu_camera"
-        android:scaleType="center"/>
+        android:scaleType="center"
+        android:visibility="invisible"/>
 
 </android.support.design.widget.CoordinatorLayout>

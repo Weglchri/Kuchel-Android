@@ -25,6 +25,8 @@ import at.kuchel.kuchelapp.service.ImageService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.utils.PermissionHandler;
 
+import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
+
 /**
  * An activity representing a single Recipe detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -40,6 +42,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
     private String recipeId;
     private Recipe recipe;
+    private FloatingActionButton cameraButton;
 
     private static final int CAMERA_REQUEST = 1888;
 
@@ -57,7 +60,8 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
         recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
 
-        FloatingActionButton cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
+
+        this.cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +73,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
                 }
             }
         });
+
         recipeServiceDb.retrieveRecipes();
     }
 
@@ -135,13 +140,16 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             fragment.setImage(bitmapImage.getImage());
 
         }
+
         fragment.setRecipe(recipe);
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
+
+        if(GlobalParamService.isUserSet() && GlobalParamService.retrieveGlobalParam(USERNAME).getValue().equals(recipe.getUsername())) {
+            cameraButton.setVisibility(View.VISIBLE);
+        }
+
     }
-
-
-
 
 }
 
