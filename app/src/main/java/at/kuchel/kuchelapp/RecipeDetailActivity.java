@@ -56,6 +56,8 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
         recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         this.cameraButton = (FloatingActionButton) this.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +102,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
+       // overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
     @Override
