@@ -1,11 +1,8 @@
 package at.kuchel.kuchelapp;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,13 +55,10 @@ public class RecipeDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recipe_detail, container, false);
 
-
-       // FloatingActionButton cameraButton = (FloatingActionButton) rootView.findViewById(R.id.camera_button);
-
         // Show the dummy content as text in a TextView.
         if (recipe != null) {
             //todo find the purpose for this
-//            ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(recipeEntity.getName());
+            // ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(recipeEntity.getName());
         }
 
         return rootView;

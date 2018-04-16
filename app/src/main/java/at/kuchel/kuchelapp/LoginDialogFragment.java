@@ -28,6 +28,8 @@ public class LoginDialogFragment extends DialogFragment {
 
         View view = inflater.inflate(R.layout.dialog_signin, null);
 
+        builder.setTitle("Login");
+        builder.setIcon(R.mipmap.ic_launcher_round);
         builder.setView(view);
 
         final EditText username =(EditText) view.findViewById(R.id.username);

@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         DatabaseManager.initDatabase(getApplicationContext());
         //getApplicationContext().deleteDatabase("kuchel");
 
-
         Button button_recipes = (Button)findViewById(R.id.button_recipes);
         button_recipes.setOnClickListener(new View.OnClickListener() {
             @Override
