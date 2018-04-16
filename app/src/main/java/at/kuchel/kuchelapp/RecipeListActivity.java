@@ -91,6 +91,22 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         return true;
     }
 
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(GlobalParamService.isUserSet()) {
+            menu.findItem(R.id.login_button).setVisible(false);
+            menu.findItem(R.id.logout_button).setVisible(true);
+        } else {
+            menu.findItem(R.id.login_button).setVisible(true);
+            menu.findItem(R.id.logout_button).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public void callSnackBarPopup(String message) {
+        Snackbar.make(findViewById(R.id.activity_recipe_list), message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -102,30 +118,22 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
             case R.id.logout_button:
                 if (GlobalParamService.isUserSet()) {
-                    GlobalParamService.clearUserdata();
+
+                    GlobalParamService.clearUserdata(); //delete user data
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if (GlobalParamService.isUserSet()) {
-                                Snackbar
-                                        .make(findViewById(R.id.activity_recipe_list), "Unexpected logout error occured", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null)
-                                        .show();
+                                callSnackBarPopup("Unerwarteter Fehler ist aufgetreten");
                             } else {
-                                Snackbar
-                                        .make(findViewById(R.id.activity_recipe_list), "Erfolgreich ausgeloggt", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null)
-                                        .show();
-                            }
+                                callSnackBarPopup("Erfolgreich ausgeloggt");
+                        }
                         }
                     }, 1000);
 
                 } else {
-                    Snackbar
-                            .make(findViewById(R.id.activity_recipe_list), "Nicht eingeloggt", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null)
-                            .show();
+                    callSnackBarPopup("Nicht eingeloggt");
                 }
                 return true;
 
@@ -191,7 +199,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         }
     }
 
-public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
     private final RecipeListActivity mParentActivity;
     private final List<Recipe> recipes;

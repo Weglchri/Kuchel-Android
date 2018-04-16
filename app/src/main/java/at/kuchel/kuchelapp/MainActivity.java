@@ -4,7 +4,6 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -19,16 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import at.kuchel.kuchelapp.builder.GlobalParamBuilder;
-import at.kuchel.kuchelapp.model.GlobalParamEntity;
+import java.util.List;
+
+import at.kuchel.kuchelapp.api.Recipe;
+import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.GlobalParamService;
-import at.kuchel.kuchelapp.service.UserService;
 import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 
 import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 
-public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AbstractRecipeActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private DrawerLayout drawer;
@@ -88,6 +88,24 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         return true;
     }
 
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(GlobalParamService.isUserSet()) {
+            menu.findItem(R.id.login_button).setVisible(false);
+            menu.findItem(R.id.logout_button).setVisible(true);
+        } else {
+            menu.findItem(R.id.login_button).setVisible(true);
+            menu.findItem(R.id.logout_button).setVisible(false);
+        }
+        return true;
+    }
+
+
+    @Override
+    public void callSnackBarPopup(String message) {
+        Snackbar.make(findViewById(R.id.activity_main), message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
+
     @Override //options menu right hand side
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -105,24 +123,15 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                         @Override
                         public void run() {
                             if (GlobalParamService.isUserSet()) {
-                                Snackbar
-                                        .make(findViewById(R.id.activity_main), "Unexpected logout error occured", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null)
-                                        .show();
+                                callSnackBarPopup("Ein unerwarteter Fehler ist aufgetreten!");
                             } else {
-                                Snackbar
-                                        .make(findViewById(R.id.activity_main), "Erfolgreich ausgeloggt", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null)
-                                        .show();
+                                callSnackBarPopup("Erfolgreich ausgeloggt");
                             }
                         }
                     }, 1000);
 
                 } else {
-                    Snackbar
-                            .make(findViewById(R.id.activity_main), "Nicht eingeloggt", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null)
-                            .show();
+                    callSnackBarPopup("Nicht eingeloggt");
                 }
                 return true;
 
@@ -165,6 +174,16 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         super.onBackPressed();
         overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
+
+    @Override
+    public void handleRecipesFromRest(List<Recipe> recipes) {}
+
+    @Override
+    public void handleRecipesFromDb(List<Recipe> recipes) {}
+
+    @Override
+    public void handleImageResponse(BitmapImage bitmapImage) {}
+
 
 }
 

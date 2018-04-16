@@ -17,16 +17,15 @@
 
 
     <item android:title="Sonstiges">
-        <!--
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:title="Share" />
+                android:id="@+id/placeholder1"
+                android:title="Placeholder 1" />
             <item
-                android:id="@+id/nav_send"
-                android:title="Send" />
+                android:id="@+id/placeholder2"
+                android:title="Placeholder 2" />
         </menu>
-        -->
+
     </item>
 
 </menu>

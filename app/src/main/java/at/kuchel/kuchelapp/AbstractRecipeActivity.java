@@ -16,4 +16,5 @@ public abstract class AbstractRecipeActivity extends AppCompatActivity {
     public abstract void handleRecipesFromRest(List<Recipe> recipes);
     public abstract void handleRecipesFromDb(List<Recipe> recipes);
     public abstract void handleImageResponse(BitmapImage bitmapImage);
+    public abstract void callSnackBarPopup(String message);
 }

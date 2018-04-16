@@ -53,10 +53,6 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detailed);
         setSupportActionBar(toolbar);
-        //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         recipeId = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
 
@@ -73,7 +69,6 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
                 }
             }
         });
-
         recipeServiceDb.retrieveRecipes();
     }
 
@@ -150,6 +145,9 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
         }
 
     }
+
+    @Override
+    public void callSnackBarPopup(String message) {}
 
 }
 
