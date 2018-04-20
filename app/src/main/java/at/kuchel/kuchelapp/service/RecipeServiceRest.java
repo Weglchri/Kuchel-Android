@@ -73,7 +73,7 @@ public class RecipeServiceRest { //implements Observable
     }
 
     private void retrieveImagesFromRestAndStoreToFileSystem(Long recipeId, String imageId) {
-        Call<Image> call = ServiceGenerator.createService(ImageApi.class, false).getImage(String.valueOf(recipeId), imageId);
+        Call<Image> call = ServiceGenerator.createService(ImageApi.class, false).getImage(imageId);
 
         call.enqueue(new Callback<Image>() {
             @Override

@@ -14,8 +14,8 @@ import retrofit2.http.Path;
 
 public interface ImageApi {
 
-    @GET("recipes/{recipeId}/images/{imageId}")
-    Call<Image> getImage(@Path("recipeId") String recipeId, @Path("imageId") String imageId);
+    @GET("images/{imageId}")
+    Call<Image> getImage(@Path("imageId") String imageId);
 
     @PUT("images")
     Call<Void> uploadImage(@Body ImageRequest imageRequest);
