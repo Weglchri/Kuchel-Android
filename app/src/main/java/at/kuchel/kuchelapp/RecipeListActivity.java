@@ -1,11 +1,17 @@
 package at.kuchel.kuchelapp;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -160,11 +166,74 @@ public class RecipeListActivity extends AbstractRecipeActivity {
     public void handleRecipesFromRest(List<Recipe> recipes) {
         Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes == null ? "0" : recipes.size()));
         this.recipes.addAll(recipes);
+        experimental(recipes);
+        handleHandsOnNotification(recipes);
+
         showRecipesInOverview();
 
-        //todo load only not loaded until now
         recipeServiceDb.retrieveRecipes();
         recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes);
+    }
+
+    private void experimental(List<Recipe> recipes){
+        if(recipes!=null && recipes.size()!=0){
+
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle("Rezepte").setMessage(
+                            String.format("%s neue Rezepte wurden geladen",recipes.size()));
+//        dialog.setPositiveButton("Confirm",
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+//
+//
+//                    }
+//                });
+        final AlertDialog alert = dialog.create();
+        alert.show();
+
+        new CountDownTimer(6000, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onFinish() {
+                // TODO Auto-generated method stub
+
+                alert.dismiss();
+            }
+        }.start();
+    }}
+
+    private void handleHandsOnNotification(List<Recipe> recipes) {
+        //todo user as popup if app is open - otherwise this maybe with a time scheduled action listener
+
+        if(recipes!=null && recipes.size()!=0){
+
+            Intent notificationIntent = new Intent(getApplicationContext(), RecipeListActivity.class);
+
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
+                    notificationIntent, 0);
+
+
+            Notification notification  = new Notification.Builder(getApplicationContext())
+                    .setCategory(Notification.CATEGORY_MESSAGE)
+                    .setContentTitle(String.format("%s neue Rezepte wurden geladen",recipes.size()))
+                    .setContentText("Versuch Sie gleich aus")
+                    .setSmallIcon(R.drawable.side_nav_bar)
+                    .setAutoCancel(true).setContentIntent(intent)
+                    .build();
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(1, notification );
+        }
     }
 
     @Override
