@@ -10,6 +10,7 @@ import java.util.Date;
 import at.kuchel.kuchelapp.RecipeDetailActivity;
 import at.kuchel.kuchelapp.api.ImageRequest;
 import at.kuchel.kuchelapp.controller.ImageApi;
+import at.kuchel.kuchelapp.service.utils.PopupNotifier;
 import at.kuchel.kuchelapp.service.utils.ServiceGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,7 +25,7 @@ import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 public class ImageService {
 
-    public void uploadImage(Bitmap bitmap, String recipeId, RecipeDetailActivity recipeDetailActivity) {
+    public void uploadImage(Bitmap bitmap, String recipeId, final RecipeDetailActivity recipeDetailActivity) {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -39,15 +40,16 @@ public class ImageService {
                 .uploadImage(imageRequest);
 
         call.enqueue(new Callback<Void>() {
+            PopupNotifier notifier = new PopupNotifier(recipeDetailActivity);
+
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                int code = response.code();
+                notifier.execute("Bild", "Bild wurde erfolgreich hochgeladen");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                // Log error here since request failed
-//                Snackbar.make(recipeDetailActivity.getv, "Hochladen des Bildes nicht erfolgreich", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                notifier.execute("Bild", "Bild konnte nicht hochgeladen werden");
             }
         });
     }

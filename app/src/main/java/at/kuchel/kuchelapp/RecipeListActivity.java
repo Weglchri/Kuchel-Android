@@ -33,6 +33,7 @@ import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
+import at.kuchel.kuchelapp.service.utils.PopupNotifier;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -92,7 +93,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
     }
 
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(GlobalParamService.isUserSet()) {
+        if (GlobalParamService.isUserSet()) {
             menu.findItem(R.id.login_button).setVisible(false);
             menu.findItem(R.id.logout_button).setVisible(true);
         } else {
@@ -128,7 +129,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
                                 callSnackBarPopup("Unerwarteter Fehler ist aufgetreten");
                             } else {
                                 callSnackBarPopup("Erfolgreich ausgeloggt");
-                        }
+                            }
                         }
                     }, 1000);
 
@@ -159,49 +160,24 @@ public class RecipeListActivity extends AbstractRecipeActivity {
     @Override
     public void handleRecipesFromRest(List<Recipe> recipes) {
         Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes == null ? "0" : recipes.size()));
-        this.recipes.addAll(recipes);
-        handlePopup(recipes);
-        handleHandsOnNotification(recipes);
+        if(recipes!=null&&recipes.size()>0){
+            this.recipes.addAll(recipes);
+            PopupNotifier notifier = new PopupNotifier(this);
+            notifier.execute("Rezepte", String.format("%s neue Rezepte wurden geladen", recipes.size()));
+            handleHandsOnNotification(recipes);
 
-        showRecipesInOverview();
+            showRecipesInOverview();
+        }
 
         recipeServiceDb.retrieveRecipes();
         recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes);
     }
 
-    private void handlePopup(List<Recipe> recipes){
-        if(recipes!=null && recipes.size()!=0){
-
-            final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                .setTitle("Rezepte").setMessage(
-                            String.format("%s neue Rezepte wurden geladen",recipes.size()));
-
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        new CountDownTimer(6000, 1000) {
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onFinish() {
-                // TODO Auto-generated method stub
-                alert.dismiss();
-            }
-        }.start();
-    }}
-
     private void handleHandsOnNotification(List<Recipe> recipes) {
         //todo user as popup if app is open - otherwise this maybe with a time scheduled action listener
 
-        if(recipes!=null && recipes.size()!=0){
-
+        if (recipes != null && recipes.size() != 0) {
             Intent notificationIntent = new Intent(getApplicationContext(), RecipeListActivity.class);
-
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -209,16 +185,16 @@ public class RecipeListActivity extends AbstractRecipeActivity {
                     notificationIntent, 0);
 
 
-            Notification notification  = new Notification.Builder(getApplicationContext())
+            Notification notification = new Notification.Builder(getApplicationContext())
                     .setCategory(Notification.CATEGORY_MESSAGE)
-                    .setContentTitle(String.format("%s neue Rezepte wurden geladen",recipes.size()))
+                    .setContentTitle(String.format("%s neue Rezepte wurden geladen", recipes.size()))
                     .setContentText("Versuch Sie gleich aus")
                     .setSmallIcon(R.drawable.side_nav_bar)
                     .setAutoCancel(true).setContentIntent(intent)
                     .build();
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(1, notification );
+            notificationManager.notify(1, notification);
         }
     }
 
@@ -256,87 +232,87 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-    private final RecipeListActivity mParentActivity;
-    private final List<Recipe> recipes;
-    private List<BitmapImage> mImages;
-    private final boolean mTwoPane;
+        private final RecipeListActivity mParentActivity;
+        private final List<Recipe> recipes;
+        private List<BitmapImage> mImages;
+        private final boolean mTwoPane;
 
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Recipe item = (Recipe) view.getTag();
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
+                    RecipeDetailFragment fragment = new RecipeDetailFragment();
+                    fragment.setArguments(arguments);
+                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.recipe_detail_container, fragment)
+                            .commit();
+                } else {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, RecipeDetailActivity.class);
+                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
+                    startActivity(intent);
+                }
+            }
+        };
+
+        SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane, List<BitmapImage> images) {
+            this.recipes = recipes;
+            mParentActivity = parent;
+            mTwoPane = twoPane;
+            mImages = images;
+        }
+
         @Override
-        public void onClick(View view) {
-            Recipe item = (Recipe) view.getTag();
-            if (mTwoPane) {
-                Bundle arguments = new Bundle();
-                arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
-                RecipeDetailFragment fragment = new RecipeDetailFragment();
-                fragment.setArguments(arguments);
-                mParentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.recipe_detail_container, fragment)
-                        .commit();
-            } else {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, RecipeDetailActivity.class);
-                intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
-                startActivity(intent);
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_content, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
+            holder.mNameView.setText(recipes.get(position).getName());
+            holder.mDurationView.setText(recipes.get(position).getDuration());
+            holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
+
+            for (BitmapImage bitmapImage : mImages) {
+                for (Image image : recipes.get(position).getImages())
+                    if (bitmapImage.getImageId().equals(image.getId())) {
+                        holder.mImageView.setImageBitmap(bitmapImage.getImage());
+                    }
+            }
+
+            holder.itemView.setTag(recipes.get(position));
+            holder.itemView.setOnClickListener(mOnClickListener);
+        }
+
+        @Override
+        public int getItemCount() {
+            return recipes.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            final TextView mIdView;
+            final TextView mNameView;
+            final TextView mDurationView;
+            final TextView mDifficultyView;
+            final ImageView mImageView;
+
+            ViewHolder(View view) {
+                super(view);
+                mIdView = (TextView) view.findViewById(R.id.id_text);
+                mNameView = (TextView) view.findViewById(R.id.content_text);
+                mDurationView = (TextView) view.findViewById(R.id.duration_text);
+                mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
+                mImageView = (ImageView) view.findViewById(R.id.imageView);
             }
         }
-    };
 
-    SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane, List<BitmapImage> images) {
-        this.recipes = recipes;
-        mParentActivity = parent;
-        mTwoPane = twoPane;
-        mImages = images;
     }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_content, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
-        holder.mNameView.setText(recipes.get(position).getName());
-        holder.mDurationView.setText(recipes.get(position).getDuration());
-        holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
-
-        for (BitmapImage bitmapImage : mImages) {
-            for (Image image : recipes.get(position).getImages())
-                if (bitmapImage.getImageId().equals(image.getId())) {
-                    holder.mImageView.setImageBitmap(bitmapImage.getImage());
-                }
-        }
-
-        holder.itemView.setTag(recipes.get(position));
-        holder.itemView.setOnClickListener(mOnClickListener);
-    }
-
-    @Override
-    public int getItemCount() {
-        return recipes.size();
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        final TextView mIdView;
-        final TextView mNameView;
-        final TextView mDurationView;
-        final TextView mDifficultyView;
-        final ImageView mImageView;
-
-        ViewHolder(View view) {
-            super(view);
-            mIdView = (TextView) view.findViewById(R.id.id_text);
-            mNameView = (TextView) view.findViewById(R.id.content_text);
-            mDurationView = (TextView) view.findViewById(R.id.duration_text);
-            mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
-            mImageView = (ImageView) view.findViewById(R.id.imageView);
-        }
-    }
-
-}
 
     @Override
     public void onBackPressed() {
