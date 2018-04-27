@@ -5,7 +5,7 @@ package at.kuchel.kuchelapp;
  */
 
 public class Constants {
-    public static final String BASE_URL = "http://10.55.201.120:8080/kuchel/api/";
+    public static final String BASE_URL = "http://192.168.178.142:8080/kuchel/api/";
 
 
     public static class GLOBAL_PARAM {

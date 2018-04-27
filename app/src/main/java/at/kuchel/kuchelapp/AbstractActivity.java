@@ -13,9 +13,11 @@ import at.kuchel.kuchelapp.dto.BitmapImage;
  * Created by bernhard on 06.04.2018.
  */
 
-public abstract class AbstractRecipeActivity extends AbstractActivity {
+public abstract class AbstractActivity extends AppCompatActivity {
 
-    public abstract void handleRecipesFromRest(List<Recipe> recipes);
-    public abstract void handleRecipesFromDb(List<Recipe> recipes);
-    public abstract void handleImageResponse(BitmapImage bitmapImage);
+    public void callSnackBarPopup(String message){
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
+
+    public abstract View getView();
 }

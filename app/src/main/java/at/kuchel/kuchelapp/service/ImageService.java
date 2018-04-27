@@ -2,7 +2,6 @@ package at.kuchel.kuchelapp.service;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
@@ -10,7 +9,7 @@ import java.util.Date;
 import at.kuchel.kuchelapp.RecipeDetailActivity;
 import at.kuchel.kuchelapp.api.ImageRequest;
 import at.kuchel.kuchelapp.controller.ImageApi;
-import at.kuchel.kuchelapp.service.utils.PopupNotifier;
+import at.kuchel.kuchelapp.service.utils.AlertDialogUtil;
 import at.kuchel.kuchelapp.service.utils.ServiceGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +30,6 @@ public class ImageService {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-
         ImageRequest imageRequest = buildImageRequest(recipeId, byteArray);
 
         Call<Void> call = ServiceGenerator.createService(ImageApi.class,
@@ -40,16 +38,16 @@ public class ImageService {
                 .uploadImage(imageRequest);
 
         call.enqueue(new Callback<Void>() {
-            PopupNotifier notifier = new PopupNotifier(recipeDetailActivity);
+            AlertDialogUtil notifier = new AlertDialogUtil(recipeDetailActivity);
 
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                notifier.execute("Bild", "Bild wurde erfolgreich hochgeladen");
+                notifier.process("Bild", "Bild wurde erfolgreich hochgeladen");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                notifier.execute("Bild", "Bild konnte nicht hochgeladen werden");
+                notifier.process("Bild", "Bild konnte nicht hochgeladen werden");
             }
         });
     }

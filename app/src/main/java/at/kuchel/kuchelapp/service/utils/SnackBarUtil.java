@@ -3,14 +3,12 @@ package at.kuchel.kuchelapp.service.utils;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import at.kuchel.kuchelapp.R;
-
-public class SnackBarBuilder {
+public class SnackBarUtil {
 
     private String message;
     private View view;
 
-    public SnackBarBuilder messages(String... messages) {
+    public SnackBarUtil messages(String... messages) {
         StringBuilder sb = new StringBuilder();
         for(String message : messages ) {
             sb.append(message);
@@ -18,12 +16,12 @@ public class SnackBarBuilder {
         return this;
     }
     
-    public SnackBarBuilder setView(View view) {
+    public SnackBarUtil setView(View view) {
         this.view = view;
         return this;
     }
 
-    public SnackBarBuilder text(String message) {
+    public SnackBarUtil text(String message) {
        this.message = message;
         return this;
     }
@@ -31,5 +29,4 @@ public class SnackBarBuilder {
     public void fireSnackMessage() {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
-    
 }

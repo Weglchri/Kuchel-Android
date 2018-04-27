@@ -1,6 +1,5 @@
 package at.kuchel.kuchelapp;
 
-import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -33,7 +31,7 @@ import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
-import at.kuchel.kuchelapp.service.utils.PopupNotifier;
+import at.kuchel.kuchelapp.service.utils.AlertDialogUtil;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -104,11 +102,6 @@ public class RecipeListActivity extends AbstractRecipeActivity {
     }
 
     @Override
-    public void callSnackBarPopup(String message) {
-        Snackbar.make(findViewById(R.id.activity_recipe_list), message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
@@ -162,8 +155,8 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes == null ? "0" : recipes.size()));
         if(recipes!=null&&recipes.size()>0){
             this.recipes.addAll(recipes);
-            PopupNotifier notifier = new PopupNotifier(this);
-            notifier.execute("Rezepte", String.format("%s neue Rezepte wurden geladen", recipes.size()));
+            AlertDialogUtil notifier = new AlertDialogUtil(this);
+            notifier.process("Rezepte", String.format("%s neue Rezepte wurden geladen", recipes.size()));
             handleHandsOnNotification(recipes);
 
             showRecipesInOverview();
@@ -228,6 +221,11 @@ public class RecipeListActivity extends AbstractRecipeActivity {
             View recyclerView = findViewById(R.id.recipe_list);
             setupRecyclerView((RecyclerView) recyclerView);
         }
+    }
+
+    @Override
+    public View getView() {
+        return findViewById(R.id.activity_recipe_list);
     }
 
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
@@ -319,12 +317,4 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
-
-    /*
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
-    */
 }

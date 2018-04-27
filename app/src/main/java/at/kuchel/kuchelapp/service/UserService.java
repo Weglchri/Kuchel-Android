@@ -34,9 +34,8 @@ public class UserService {
                 int code = response.code();
                 if (code == HttpStatus.OK.value()) {
 
-                    Profile profile = response.body();
+                    Profile profile = response.body(); //maybe can be used in later features
 
-                    //username and password id correct and can be stored
                     GlobalParamService.storeGlobalParam(new GlobalParamBuilder()
                             .setKey(USERNAME).setValue(username).build());
                     GlobalParamService.storeGlobalParam(new GlobalParamBuilder()

@@ -28,11 +28,9 @@ import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 
-public class MainActivity extends AbstractRecipeActivity implements NavigationView.OnNavigationItemSelectedListener {
-
+public class MainActivity extends AbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +97,9 @@ public class MainActivity extends AbstractRecipeActivity implements NavigationVi
         return true;
     }
 
-
     @Override
-    public void callSnackBarPopup(String message) {
-        Snackbar.make(findViewById(R.id.activity_main), message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    public View getView() {
+        return findViewById(R.id.activity_main);
     }
 
 
@@ -174,16 +171,5 @@ public class MainActivity extends AbstractRecipeActivity implements NavigationVi
         super.onBackPressed();
         overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
-
-    @Override
-    public void handleRecipesFromRest(List<Recipe> recipes) {}
-
-    @Override
-    public void handleRecipesFromDb(List<Recipe> recipes) {}
-
-    @Override
-    public void handleImageResponse(BitmapImage bitmapImage) {}
-
-
 }
 

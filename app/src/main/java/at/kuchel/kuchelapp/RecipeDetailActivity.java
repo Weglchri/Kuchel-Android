@@ -135,7 +135,6 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
             barLayout.setBackground(background);
             fragment.setImage(bitmapImage.getImage());
-
         }
 
         fragment.setRecipe(recipe);
@@ -149,7 +148,8 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
     }
 
     @Override
-    public void callSnackBarPopup(String message) {}
-
+    public View getView() {
+        return findViewById(R.id.activity_main);
+    }
 }
 
