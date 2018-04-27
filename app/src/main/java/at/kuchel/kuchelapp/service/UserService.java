@@ -26,7 +26,7 @@ public class UserService {
 
     public void loadUserProfileViaRest(final AbstractRecipeActivity abstractRecipeActivity, final String username, final String password) {
 
-        Call<Profile> call = ServiceGenerator.createService(ProfileApi.class, username, password,true).getProfile();
+        Call<Profile> call = ServiceGenerator.createService(ProfileApi.class, username, password).getProfile();
 
         call.enqueue(new Callback<Profile>() {
             @Override

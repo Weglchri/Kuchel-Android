@@ -6,15 +6,11 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,8 +33,6 @@ import at.kuchel.kuchelapp.dto.BitmapImage;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
-
-import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -166,7 +160,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
     public void handleRecipesFromRest(List<Recipe> recipes) {
         Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes == null ? "0" : recipes.size()));
         this.recipes.addAll(recipes);
-        experimental(recipes);
+        handlePopup(recipes);
         handleHandsOnNotification(recipes);
 
         showRecipesInOverview();
@@ -175,20 +169,13 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         recipeServiceDb.storeNewAndUpdateExistingRecipes(recipes);
     }
 
-    private void experimental(List<Recipe> recipes){
+    private void handlePopup(List<Recipe> recipes){
         if(recipes!=null && recipes.size()!=0){
 
             final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
                 .setTitle("Rezepte").setMessage(
                             String.format("%s neue Rezepte wurden geladen",recipes.size()));
-//        dialog.setPositiveButton("Confirm",
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int whichButton) {
-//
-//
-//                    }
-//                });
+
         final AlertDialog alert = dialog.create();
         alert.show();
 
@@ -203,7 +190,6 @@ public class RecipeListActivity extends AbstractRecipeActivity {
             @Override
             public void onFinish() {
                 // TODO Auto-generated method stub
-
                 alert.dismiss();
             }
         }.start();

@@ -42,9 +42,9 @@ public class RecipeServiceRest { //implements Observable
         GlobalParamEntity lastSyncDate = GlobalParamService.retrieveGlobalParam(LAST_SYNC_DATE);
         Call<List<Recipe>> call;
         if (lastSyncDate != null) {
-            call = ServiceGenerator.createService(RecipeApi.class, true).getRecipes(LastSyncMapper.map(lastSyncDate));
+            call = ServiceGenerator.createService(RecipeApi.class).getRecipes(LastSyncMapper.map(lastSyncDate));
         } else {
-            call = ServiceGenerator.createService(RecipeApi.class, true).getRecipes();
+            call = ServiceGenerator.createService(RecipeApi.class).getRecipes();
         }
 
 
@@ -73,7 +73,7 @@ public class RecipeServiceRest { //implements Observable
     }
 
     private void retrieveImagesFromRestAndStoreToFileSystem(Long recipeId, String imageId) {
-        Call<Image> call = ServiceGenerator.createService(ImageApi.class, false).getImage(imageId);
+        Call<Image> call = ServiceGenerator.createService(ImageApi.class).getImage(imageId);
 
         call.enqueue(new Callback<Image>() {
             @Override

@@ -90,7 +90,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             ImageService imageService = new ImageService();
-            imageService.uploadImage(photo, recipeId);
+            imageService.uploadImage(photo, recipeId,this);
 
             //just background related
             BitmapDrawable background = new BitmapDrawable(getResources(), photo);

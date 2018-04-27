@@ -19,49 +19,43 @@ import static at.kuchel.kuchelapp.Constants.BASE_URL;
 
 public class ServiceGenerator {
 
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    private static OkHttpClient.Builder httpTimeoutClient = new OkHttpClient.Builder()
-            .connectTimeout(3, TimeUnit.SECONDS).readTimeout(3, TimeUnit.SECONDS);
+    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+            .connectTimeout(4, TimeUnit.SECONDS);
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create(GsonHelper.customGson));
 
-    private static Retrofit retrofit = builder.build();
-
-
-    public static <S> S createService(Class<S> serviceClass, boolean withTimeout) {
-        return createService(serviceClass, null, withTimeout);
+    public static <S> S createService(Class<S> serviceClass) {
+        return createService(serviceClass, null);
     }
 
     public static <S> S createService(
-            Class<S> serviceClass, String username, String password, boolean withTimeout) {
+            Class<S> serviceClass, String username, String password) {
         if (!TextUtils.isEmpty(username)
                 && !TextUtils.isEmpty(password)) {
             String authToken = Credentials.basic(username, password);
-            return createService(serviceClass, authToken, withTimeout);
+            return createService(serviceClass, authToken);
         }
-
-        return createService(serviceClass, null, withTimeout);
+        return createService(serviceClass, null);
     }
 
     private static <S> S createService(
-            Class<S> serviceClass, final String authToken, final boolean withTimeout) {
+            Class<S> serviceClass, final String authToken) {
+
+        OkHttpClient.Builder client = httpClient;
+
         if (!TextUtils.isEmpty(authToken)) {
             AuthenticationInterceptor interceptor =
                     new AuthenticationInterceptor(authToken);
 
-            OkHttpClient.Builder client = withTimeout ? httpTimeoutClient : httpClient;
-
             if (!client.interceptors().contains(interceptor)) {
                 client.addInterceptor(interceptor);
-
-                builder.client(client.build());
-                retrofit = builder.build();
             }
         }
+        builder.client(client.build());
+        Retrofit retrofit = builder.build();
 
         return retrofit.create(serviceClass);
     }
