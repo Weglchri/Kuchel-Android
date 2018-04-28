@@ -1,20 +1,13 @@
 package at.kuchel.kuchelapp;
 
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.IntentService;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +43,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
     private static final int CAMERA_REQUEST = 1888;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,11 +70,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             }
         });
 
-
-        //TODO without if block app crahses if orientation gets changed
-        if (savedInstanceState == null) {
-            recipeServiceDb.retrieveRecipes();
-        }
+        recipeServiceDb.retrieveRecipes();
     }
 
 
@@ -135,10 +125,12 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
     @Override
     public void handleImageResponse(BitmapImage bitmapImage) {
+
         Bundle arguments = new Bundle();
         arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
 
         RecipeDetailFragment fragment = new RecipeDetailFragment();
+
         if (bitmapImage != null) {
             BitmapDrawable background = new BitmapDrawable(getResources(), bitmapImage.getImage());
             AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
@@ -146,11 +138,12 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             fragment.setImage(bitmapImage.getImage());
         }
 
+
         fragment.setRecipe(recipe);
         fragment.setArguments(arguments);
-        getSupportFragmentManager().beginTransaction().add(R.id.recipe_detail_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.recipe_detail_container, fragment).commit();
 
-        if(GlobalParamService.isUserSet() && GlobalParamService.retrieveGlobalParam(USERNAME).getValue().equals(recipe.getUsername())) {
+        if (GlobalParamService.isUserSet() && GlobalParamService.retrieveGlobalParam(USERNAME).getValue().equals(recipe.getUsername())) {
             cameraButton.setVisibility(View.VISIBLE);
         }
 

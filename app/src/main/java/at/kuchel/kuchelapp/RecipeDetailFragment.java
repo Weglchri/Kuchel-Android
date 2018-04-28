@@ -41,11 +41,6 @@ public class RecipeDetailFragment extends Fragment {
 
         //Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe with id %s from db", recipe.getId()));
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // get arguments of recipe
-        }
-
-
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.getActivity().findViewById(R.id.toolbar_layout_detailed);
         if (appBarLayout != null) {
             appBarLayout.setTitle(recipe.getName());
