@@ -48,10 +48,9 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="189dp"
             android:layout_weight="1"
-            android:contentDescription="image"
-            app:srcCompat="@drawable/lunch" />
+            android:contentDescription="@string/image"/>
     </LinearLayout>
 </LinearLayout>

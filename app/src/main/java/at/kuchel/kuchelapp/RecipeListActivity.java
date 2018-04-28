@@ -251,6 +251,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
                     intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in, R.anim.nothing);
                 }
             }
         };

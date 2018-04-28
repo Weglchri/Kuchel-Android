@@ -37,14 +37,8 @@ public class RecipeDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            String recipeId = String.valueOf(getArguments().get(ARG_ITEM_ID));
+        //Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe with id %s from db", recipe.getId()));
 
-        }
-
-        Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe with id %s from db", recipe.getId()));
-
-        //todo load only not loaded until now
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.getActivity().findViewById(R.id.toolbar_layout_detailed);
         if (appBarLayout != null) {
             appBarLayout.setTitle(recipe.getName());
@@ -54,12 +48,6 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recipe_detail, container, false);
-
-        // Show the dummy content as text in a TextView.
-        if (recipe != null) {
-            //todo find the purpose for this
-            // ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(recipeEntity.getName());
-        }
 
         return rootView;
     }

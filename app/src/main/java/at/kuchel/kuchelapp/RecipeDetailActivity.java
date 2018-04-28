@@ -106,7 +106,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-       // overridePendingTransition(R.anim.nothing, R.anim.slide_out);
+        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
     @Override

@@ -21,4 +21,6 @@
 
     <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
+
+    <string name="image">Platzhalter-Bild</string>
 </resources>
