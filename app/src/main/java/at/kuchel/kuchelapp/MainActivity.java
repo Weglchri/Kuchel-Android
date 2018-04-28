@@ -1,7 +1,10 @@
 package at.kuchel.kuchelapp;
 
 import android.app.DialogFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -17,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -61,7 +65,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
                     overridePendingTransition(R.anim.slide_in, R.anim.nothing);
                 } else {
                     Log.i("Meine Rezepte", "Nicht eingeloggt");
-                    Snackbar.make(view, "Loggen Sie sich ein um ihre Rezepte zu sehen!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    callSnackBarPopup("Loggen Sie sich ein um ihre Rezepte zu sehen!");
                 }
 
             }
@@ -97,11 +101,11 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         return true;
     }
 
+
     @Override
     public View getView() {
         return findViewById(R.id.activity_main);
     }
-
 
     @Override //options menu right hand side
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -158,7 +162,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
                 overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             } else {
                 Log.i("Meine Rezepte", "Nicht eingeloggt");
-                Snackbar.make(findViewById(R.id.activity_main), "Loggen Sie sich ein um ihre Rezepte zu sehen!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                callSnackBarPopup("Loggen Sie sich ein um ihre Rezepte zu sehen!");
             }
         }
         //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);

@@ -46,13 +46,14 @@ public class UserService {
 
                 } else {
                     Log.i("loaduserProfileViaRest", "Incorrect Credentials");
-                    //todo return to activity with error
+                    abstractRecipeActivity.callSnackBarPopup("Falsche Zugangsdaten");
                 }
             }
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
                 // Log error here since request failed
+                abstractRecipeActivity.callSnackBarPopup("Keine Verbindung zum Server möglich");
                 Log.i("UserService ", "Wrong Credentials");
             }
         });

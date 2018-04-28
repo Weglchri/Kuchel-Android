@@ -2,7 +2,11 @@ package at.kuchel.kuchelapp;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;

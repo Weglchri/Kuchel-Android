@@ -22,7 +22,7 @@ public class AlertDialogUtil {
         final AlertDialog alert = dialog.create();
         alert.show();
 
-        new CountDownTimer(6000, 1000) {
+        new CountDownTimer(5000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {

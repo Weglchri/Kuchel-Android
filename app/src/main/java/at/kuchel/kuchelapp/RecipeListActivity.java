@@ -155,8 +155,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes == null ? "0" : recipes.size()));
         if(recipes!=null&&recipes.size()>0){
             this.recipes.addAll(recipes);
-            AlertDialogUtil notifier = new AlertDialogUtil(this);
-            notifier.process("Rezepte", String.format("%s neue Rezepte wurden geladen", recipes.size()));
+            callSnackBarPopup(String.format("%s Rezepte wurden geladen", recipes.size()));
             handleHandsOnNotification(recipes);
 
             showRecipesInOverview();

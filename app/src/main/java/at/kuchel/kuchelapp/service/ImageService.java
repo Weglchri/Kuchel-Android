@@ -1,7 +1,11 @@
 package at.kuchel.kuchelapp.service;
 
+import android.app.Service;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
@@ -22,7 +26,7 @@ import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
  * Created by bernhard on 03.04.2018.
  */
 
-public class ImageService {
+public class ImageService{
 
     public void uploadImage(Bitmap bitmap, String recipeId, final RecipeDetailActivity recipeDetailActivity) {
 
