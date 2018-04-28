@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.service.GlobalParamService;
@@ -30,6 +31,7 @@ public class RecipeDetailFragment extends Fragment {
     private Recipe recipe;
     private Bitmap image;
 
+
     public RecipeDetailFragment() {
     }
 
@@ -38,6 +40,11 @@ public class RecipeDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe with id %s from db", recipe.getId()));
+
+        if (getArguments().containsKey(ARG_ITEM_ID)) {
+            // get arguments of recipe
+        }
+
 
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.getActivity().findViewById(R.id.toolbar_layout_detailed);
         if (appBarLayout != null) {
@@ -48,6 +55,10 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recipe_detail, container, false);
+
+        if (recipe != null) {
+            ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(recipe.getName());
+        }
 
         return rootView;
     }

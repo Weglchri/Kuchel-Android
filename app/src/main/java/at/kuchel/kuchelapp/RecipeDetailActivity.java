@@ -75,7 +75,12 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
                 }
             }
         });
-        recipeServiceDb.retrieveRecipes();
+
+
+        //TODO without if block app crahses if orientation gets changed
+        if (savedInstanceState == null) {
+            recipeServiceDb.retrieveRecipes();
+        }
     }
 
 
@@ -96,7 +101,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             ImageService imageService = new ImageService();
             imageService.uploadImage(photo, recipeId,this);
 
-            //just background related
+            //set iamge as background in detail recipe when freshly taken
             BitmapDrawable background = new BitmapDrawable(getResources(), photo);
             AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
             barLayout.setBackground(background);
