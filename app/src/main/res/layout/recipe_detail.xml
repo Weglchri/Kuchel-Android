@@ -9,14 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/textbackgorund"
+        android:background="@drawable/textbackground"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
         android:paddingLeft="40dp"
         android:paddingTop="10dp">
 
         <LinearLayout
-            android:layout_width="93dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -38,14 +38,14 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="97dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/DifficultyTitle"
-                android:layout_width="767dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/difficulty"
@@ -53,9 +53,9 @@
 
             <TextView
                 android:id="@+id/textViewDifficulty"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="@string/textfield" />
         </LinearLayout>
@@ -87,16 +87,19 @@
         android:id="@+id/ingredientsView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
         android:layout_weight="1"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical"
+        android:paddingLeft="40dp"
+        android:paddingTop="20dp"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/instructionsView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="40dp">
 
     </LinearLayout>
 
