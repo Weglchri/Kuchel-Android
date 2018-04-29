@@ -8,9 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import at.kuchel.kuchelapp.api.Ingredient;
+import at.kuchel.kuchelapp.api.Instruction;
 import at.kuchel.kuchelapp.api.Recipe;
+import at.kuchel.kuchelapp.builder.RecipeBuilder;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 
 import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
@@ -39,7 +43,7 @@ public class RecipeDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe with id %s from db", recipe.getId()));
+        Log.i("retrieve_recipe_rest", String.format("Retrieved  recipe from db"));
 
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.getActivity().findViewById(R.id.toolbar_layout_detailed);
         if (appBarLayout != null) {
@@ -52,7 +56,21 @@ public class RecipeDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recipe_detail, container, false);
 
         if (recipe != null) {
-            ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(recipe.getName());
+            ((TextView) rootView.findViewById(R.id.textViewDifficulty)).setText(recipe.getDifficulty());
+            ((TextView) rootView.findViewById(R.id.textViewDuration)).setText(recipe.getDuration() + "min");
+            ((TextView) rootView.findViewById(R.id.textViewCreator)).setText(recipe.getUsername());
+
+            RecipeBuilder recipeBuilder = new RecipeBuilder(recipe);
+
+            // add ingredients to view
+            LinearLayout linearLayoutIngredients = ((LinearLayout) rootView.findViewById(R.id.ingredientsView));
+            linearLayoutIngredients.addView(recipeBuilder.buildIngredients(getContext()));
+
+            // add instructions to view
+            LinearLayout linearLayoutInstructions = ((LinearLayout) rootView.findViewById(R.id.instructionsView));
+            linearLayoutInstructions.addView(recipeBuilder.buildInstructions(getContext()));
+
+
         }
 
         return rootView;

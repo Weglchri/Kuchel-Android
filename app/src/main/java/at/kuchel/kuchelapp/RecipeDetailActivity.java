@@ -138,7 +138,6 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             fragment.setImage(bitmapImage.getImage());
         }
 
-
         fragment.setRecipe(recipe);
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction().replace(R.id.recipe_detail_container, fragment).commit();

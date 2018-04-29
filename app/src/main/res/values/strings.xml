@@ -23,4 +23,9 @@
     <string name="password">Passwort</string>
 
     <string name="image">Platzhalter-Bild</string>
+    <string name="difficulty">Schwierigkeit</string>
+    <string name="duration">Dauer</string>
+    <string name="creator">Ersteller</string>
+
+    <string name="textfield">Textfield</string>
 </resources>
