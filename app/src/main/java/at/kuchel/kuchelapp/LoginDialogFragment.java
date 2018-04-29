@@ -46,7 +46,7 @@ public class LoginDialogFragment extends DialogFragment {
                 .setPositiveButton("Anmelden", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         LoginDialogFragment.this.dialog = dialog;
-                        userService.loadUserProfileViaRest((AbstractRecipeActivity) getActivity(), username.getText().toString(), password.getText().toString());
+                        userService.loadUserProfileViaRest((AbstractActivity) getActivity(), username.getText().toString(), password.getText().toString());
                     }
                 });
 

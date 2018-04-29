@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.springframework.http.HttpStatus;
 
+import at.kuchel.kuchelapp.AbstractActivity;
 import at.kuchel.kuchelapp.AbstractRecipeActivity;
 import at.kuchel.kuchelapp.MainActivity;
 import at.kuchel.kuchelapp.R;
@@ -24,7 +25,7 @@ import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 public class UserService {
 
-    public void loadUserProfileViaRest(final AbstractRecipeActivity abstractRecipeActivity, final String username, final String password) {
+    public void loadUserProfileViaRest(final AbstractActivity abstractActivity, final String username, final String password) {
 
         Call<Profile> call = ServiceGenerator.createService(ProfileApi.class, username, password).getProfile();
 
@@ -42,18 +43,18 @@ public class UserService {
                             .setKey(PASSWORD).setValue(password).build());
 
                     Log.i("UserService ", "Correct Credentials");
-                    abstractRecipeActivity.callSnackBarPopup("Erfolgreich eingeloggt");
+                    abstractActivity.callSnackBarPopup("Erfolgreich eingeloggt");
 
                 } else {
                     Log.i("loaduserProfileViaRest", "Incorrect Credentials");
-                    abstractRecipeActivity.callSnackBarPopup("Falsche Zugangsdaten");
+                    abstractActivity.callSnackBarPopup("Falsche Zugangsdaten");
                 }
             }
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
                 // Log error here since request failed
-                abstractRecipeActivity.callSnackBarPopup("Keine Verbindung zum Server möglich");
+                abstractActivity.callSnackBarPopup("Keine Verbindung zum Server möglich");
                 Log.i("UserService ", "Wrong Credentials");
             }
         });

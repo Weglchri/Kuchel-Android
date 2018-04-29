@@ -27,8 +27,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@android:color/holo_green_light"
-            android:paddingBottom="30dp"
-            android:paddingTop="30dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
             android:text="@string/recipes"
             app:layout_anchor="@+id/textView"
             app:layout_anchorGravity="bottom|center" />
@@ -42,8 +42,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@android:color/holo_green_light"
-            android:paddingBottom="30dp"
-            android:paddingTop="30dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
             android:text="@string/myrecipes"
             app:layout_anchor="@+id/textView"
             app:layout_anchorGravity="bottom|center" />
