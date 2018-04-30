@@ -10,13 +10,34 @@
 
     <!-- standard front -->
 
+    <TextView
+        android:id="@+id/welcome_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="@font/orangejuice"
+        android:gravity="center_horizontal|center_vertical"
+        android:paddingTop="200dp"
+        android:text="@string/welcome"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle.Inverse"
+        android:textSize="50sp"
+        android:textStyle="italic"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="bottom|center" />
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="420dp"
         android:orientation="vertical"
-        app:layout_anchor="@+id/textView"
-        app:layout_anchorGravity="bottom|center">
+        android:paddingTop="200dp"
+        app:layout_anchor="@+id/welcome_title"
+        app:layout_anchorGravity="left|bottom">
 
         <Button
             android:id="@+id/button_recipes"
@@ -30,7 +51,7 @@
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
             android:text="@string/recipes"
-            app:layout_anchor="@+id/textView"
+            app:layout_anchor="@+id/welcome_title"
             app:layout_anchorGravity="bottom|center" />
 
         <Button
@@ -45,37 +66,9 @@
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
             android:text="@string/myrecipes"
-            app:layout_anchor="@+id/textView"
+            app:layout_anchor="@+id/welcome_title"
             app:layout_anchorGravity="bottom|center" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="260dp"
-        android:fontFamily="@font/orangejuice"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="@string/welcome"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle.Inverse"
-        android:textSize="50sp"
-        android:textStyle="italic"
-        app:layout_anchor="@+id/imageView"
-        app:layout_anchorGravity="bottom|center" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="500dp"
-        android:layout_height="240dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="Kuchel_welcome_image"
-        app:srcCompat="@mipmap/lunchy" />
-
-    <include
-        layout="@layout/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </android.support.design.widget.CoordinatorLayout>

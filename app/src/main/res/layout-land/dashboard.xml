@@ -21,7 +21,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/welcome_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:orientation="vertical"
-            app:layout_anchor="@+id/textView"
+            app:layout_anchor="@+id/welcome_title"
             app:layout_anchorGravity="bottom|center">
 
             <Button
@@ -55,7 +55,7 @@
                 android:paddingBottom="20dp"
                 android:paddingTop="20dp"
                 android:text="@string/recipes"
-                app:layout_anchor="@+id/textView"
+                app:layout_anchor="@+id/welcome_title"
                 app:layout_anchorGravity="bottom|center" />
 
             <Button
@@ -70,7 +70,7 @@
                 android:paddingBottom="20dp"
                 android:paddingTop="20dp"
                 android:text="@string/myrecipes"
-                app:layout_anchor="@+id/textView"
+                app:layout_anchor="@+id/welcome_title"
                 app:layout_anchorGravity="bottom|center" />
 
         </LinearLayout>
