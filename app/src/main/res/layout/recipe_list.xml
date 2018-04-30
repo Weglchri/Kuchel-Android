@@ -6,9 +6,7 @@
     android:name="at.kuchel.kuchelapp.RecipeListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="20dp"
+    android:layout_margin="40dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="at.kuchel.kuchelapp.RecipeListActivity"
     tools:listitem="@layout/recipe_list_content" />

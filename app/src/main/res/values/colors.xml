@@ -5,6 +5,10 @@
     <color name="colorMenuDark">#86b200</color>
     <color name="colorMenuLight">#bfff00</color>
     <color name="colorYellowGrain">#fff200</color>
+    <color name="colorYellowLightGrain">#fff364</color>
+
+
+    <color name="white">#ffffff</color>
 
     <color name="colorAccent">#FF4081</color>
 </resources>

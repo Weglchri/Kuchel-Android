@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -66,7 +67,6 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-
 
         AppBarLayout appBarLayout = (AppBarLayout) this.findViewById(R.id.app_bar_main);
         appBarLayout.setExpanded(false);
@@ -186,14 +186,13 @@ public class RecipeListActivity extends AbstractRecipeActivity {
             @Override
             public void onClick(View view) {
                 Recipe item = (Recipe) view.getTag();
+
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
                     RecipeDetailFragment fragment = new RecipeDetailFragment();
                     fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_detail_container, fragment)
-                            .commit();
+                    mParentActivity.getSupportFragmentManager().beginTransaction().replace(R.id.recipe_detail_container, fragment).commit();
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
@@ -206,9 +205,9 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane, List<BitmapImage> images) {
             this.recipes = recipes;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
-            mImages = images;
+            this.mParentActivity = parent;
+            this.mTwoPane = twoPane;
+            this.mImages = images;
         }
 
         @Override
@@ -219,10 +218,10 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
+            //holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
             holder.mNameView.setText(recipes.get(position).getName());
-            holder.mDurationView.setText(recipes.get(position).getDuration());
-            holder.mDifficultyView.setText(recipes.get(position).getDifficulty());
+            holder.mDurationView.setText("Dauer: " + recipes.get(position).getDuration() + "min");
+            holder.mDifficultyView.setText("Schwierigkeit: " + recipes.get(position).getDifficulty());
 
             for (BitmapImage bitmapImage : mImages) {
                 for (Image image : recipes.get(position).getImages())
@@ -242,7 +241,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
-            final TextView mIdView;
+            //final TextView mIdView;
             final TextView mNameView;
             final TextView mDurationView;
             final TextView mDifficultyView;
@@ -250,7 +249,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
 
             ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
+                //mIdView = (TextView) view.findViewById(R.id.id_text);
                 mNameView = (TextView) view.findViewById(R.id.content_text);
                 mDurationView = (TextView) view.findViewById(R.id.duration_text);
                 mDifficultyView = (TextView) view.findViewById(R.id.difficulty_text);
