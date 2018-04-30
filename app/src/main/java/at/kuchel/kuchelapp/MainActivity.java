@@ -94,72 +94,8 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if(GlobalParamService.isUserSet()) {
-            menu.findItem(R.id.login_button).setVisible(false);
-            menu.findItem(R.id.logout_button).setVisible(true);
-        } else {
-            menu.findItem(R.id.login_button).setVisible(true);
-            menu.findItem(R.id.logout_button).setVisible(false);
-        }
-        return true;
-    }
-
-
-    @Override
-    public View getView() {
-        return findViewById(R.id.activity_main);
-    }
-
-    @Override //options menu right hand side
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.login_button:
-                DialogFragment newFragment = LoginDialogFragment.newInstance();
-                newFragment.show(getFragmentManager(), "dialog");
-                return true;
-
-            case R.id.logout_button:
-                if (GlobalParamService.isUserSet()) {
-                    GlobalParamService.clearUserdata();
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (GlobalParamService.isUserSet()) {
-                                callSnackBarPopup("Ein unerwarteter Fehler ist aufgetreten!");
-                            } else {
-                                callSnackBarPopup("Erfolgreich ausgeloggt");
-                            }
-                        }
-                    }, 1000);
-
-                } else {
-                    callSnackBarPopup("Nicht eingeloggt");
-                }
-                return true;
-
-            case R.id.clear_database_button:
-                getApplicationContext().deleteDatabase("kuchel");
-                Log.i("Datenbank", "Datenbank wurde zurückgesetzt");
-                callSnackBarPopup("Datenbank wurde zurückgesetzt");
-                DatabaseManager.initDatabase(getApplicationContext());
-                return true;
-
-            default:
-                return false;
-        }
-    }
-
-    @Override //drawer menu left hand side
+    @Override //Drawer menu controller
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_dashboard) {  //go back to mainpage
@@ -189,9 +125,10 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
+    public View getView() {
+        return findViewById(R.id.activity_main);
     }
+
+
 }
 

@@ -74,17 +74,6 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
@@ -96,12 +85,6 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
             AppBarLayout barLayout = (AppBarLayout) findViewById(R.id.app_bar_detailed);
             barLayout.setBackground(background);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
     @Override
@@ -150,7 +133,7 @@ public class RecipeDetailActivity extends AbstractRecipeActivity {
 
     @Override
     public View getView() {
-        return findViewById(R.id.activity_main);
+        return findViewById(R.id.activity_recipe_detail);
     }
 }
 

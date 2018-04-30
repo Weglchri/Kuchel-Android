@@ -64,16 +64,13 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
 
 
         AppBarLayout appBarLayout = (AppBarLayout) this.findViewById(R.id.app_bar_main);
         appBarLayout.setExpanded(false);
 
-        //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
-        //if user is set it comes from ALLRECIPES or MYRECIPES list
         if (getIntent().getExtras() != null) {
             Log.i("RecipeListActivity", "getExtras");
             this.recipeCreator = getIntent().getExtras().getString("username");
@@ -87,64 +84,6 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         }
         recipeServiceRest.retrieveRecipes();
     }
-
-
-    //right hand side navigation menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (GlobalParamService.isUserSet()) {
-            menu.findItem(R.id.login_button).setVisible(false);
-            menu.findItem(R.id.logout_button).setVisible(true);
-        } else {
-            menu.findItem(R.id.login_button).setVisible(true);
-            menu.findItem(R.id.logout_button).setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.login_button:
-                DialogFragment newFragment = LoginDialogFragment.newInstance();
-                newFragment.show(getFragmentManager(), "dialog");
-                return true;
-
-            case R.id.logout_button:
-                if (GlobalParamService.isUserSet()) {
-
-                    GlobalParamService.clearUserdata(); //delete user data
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (GlobalParamService.isUserSet()) {
-                                callSnackBarPopup("Unerwarteter Fehler ist aufgetreten");
-                            } else {
-                                callSnackBarPopup("Erfolgreich ausgeloggt");
-                            }
-                        }
-                    }, 1000);
-
-                } else {
-                    callSnackBarPopup("Nicht eingeloggt");
-                }
-                return true;
-
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
 
     private void showRecipesInOverview() {
         View recyclerView = findViewById(R.id.recipe_list);
@@ -233,6 +172,9 @@ public class RecipeListActivity extends AbstractRecipeActivity {
         return findViewById(R.id.activity_recipe_list);
     }
 
+
+
+
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
@@ -316,11 +258,5 @@ public class RecipeListActivity extends AbstractRecipeActivity {
             }
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 }
