@@ -24,6 +24,7 @@ import at.kuchel.kuchelapp.model.RecipeInstruction;
 @Dao
 public abstract class RecipeDao {
 
+    @Transaction
     public void insertAll(List<RecipeEntity> recipes) {
         for (RecipeEntity recipe : recipes) {
             if (recipe.getInstructions() != null) {

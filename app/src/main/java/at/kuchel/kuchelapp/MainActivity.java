@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
@@ -34,7 +36,7 @@ import at.kuchel.kuchelapp.service.utils.DatabaseManager;
 import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
 
 
-public class MainActivity extends AbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AbstractActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawer;
 
@@ -98,6 +100,7 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
         return true;
     }
 
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if(GlobalParamService.isUserSet()) {
             menu.findItem(R.id.login_button).setVisible(false);
@@ -142,6 +145,13 @@ public class MainActivity extends AbstractActivity implements NavigationView.OnN
                 } else {
                     callSnackBarPopup("Nicht eingeloggt");
                 }
+                return true;
+
+            case R.id.clear_database_button:
+                getApplicationContext().deleteDatabase("kuchel");
+                Log.i("Datenbank", "Datenbank wurde zurückgesetzt");
+                callSnackBarPopup("Datenbank wurde zurückgesetzt");
+                DatabaseManager.initDatabase(getApplicationContext());
                 return true;
 
             default:

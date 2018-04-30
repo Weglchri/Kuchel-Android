@@ -9,6 +9,10 @@
         android:id="@+id/logout_button"
         android:title="Logout"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/clear_database_button"
+        android:title="Datenbank zurücksetzen"
+        app:showAsAction="never" />
 
     <!-- <item android:id="@+id/courses"
                android:icon="@drawable/course"
