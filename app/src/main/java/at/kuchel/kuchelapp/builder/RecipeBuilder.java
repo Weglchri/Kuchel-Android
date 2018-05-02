@@ -2,6 +2,7 @@ package at.kuchel.kuchelapp.builder;
 
 import android.content.Context;
 import android.widget.TextView;
+
 import at.kuchel.kuchelapp.api.Ingredient;
 import at.kuchel.kuchelapp.api.Instruction;
 import at.kuchel.kuchelapp.api.Recipe;
@@ -19,9 +20,13 @@ public class RecipeBuilder {
 
 
     public TextView buildIngredients(Context context) {
-        for(Ingredient ingredient : recipe.getIngredients()) {
-            ingredients.append(ingredient.getQuantity()).append(" ");
-            ingredients.append(ingredient.getQualifier()).append(" ");
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            if (ingredient.getQuantity() != null) {
+                ingredients.append(ingredient.getQuantity()).append(" ");
+            }
+            if (ingredient.getQualifier() != null) {
+                ingredients.append(ingredient.getQualifier()).append(" ");
+            }
             ingredients.append(ingredient.getName());
             ingredients.append("\n");
         }
@@ -34,7 +39,7 @@ public class RecipeBuilder {
 
 
     public TextView buildInstructions(Context context) {
-        for(Instruction instruction : recipe.getInstructions()) {
+        for (Instruction instruction : recipe.getInstructions()) {
             instructions.append(instruction.getStep() + ". Schritt: ");
             instructions.append("   ");
             instructions.append(instruction.getDescription());
