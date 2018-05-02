@@ -31,6 +31,7 @@ import java.util.Objects;
 import at.kuchel.kuchelapp.api.Image;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.dto.BitmapImage;
+import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 import at.kuchel.kuchelapp.service.RecipeServiceDb;
 import at.kuchel.kuchelapp.service.RecipeServiceRest;
@@ -98,7 +99,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
     @Override
     public void handleRecipesFromRest(List<Recipe> recipes) {
         Log.i("retrieve_recipe_rest", String.format("Retrieved %s recipes from rest", recipes == null ? "0" : recipes.size()));
-        if(recipes!=null&&recipes.size()>0){
+        if (recipes != null && recipes.size() > 0) {
             this.recipes.addAll(recipes);
             callSnackBarPopup(String.format("%s Rezepte wurden geladen", recipes.size()));
             handleHandsOnNotification(recipes);
@@ -173,8 +174,6 @@ public class RecipeListActivity extends AbstractRecipeActivity {
     }
 
 
-
-
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
@@ -221,7 +220,7 @@ public class RecipeListActivity extends AbstractRecipeActivity {
             //holder.mIdView.setText(String.valueOf(recipes.get(position).getId()));
             holder.mNameView.setText(recipes.get(position).getName());
             holder.mDurationView.setText("Dauer: " + recipes.get(position).getDuration() + "min");
-            holder.mDifficultyView.setText("Schwierigkeit: " + recipes.get(position).getDifficulty());
+            holder.mDifficultyView.setText("Schwierigkeit: " + RecipeMapper.getDifficultyAsString(recipes.get(position).getDifficulty()));
 
             for (BitmapImage bitmapImage : mImages) {
                 for (Image image : recipes.get(position).getImages())

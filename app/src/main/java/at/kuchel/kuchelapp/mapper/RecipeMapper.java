@@ -42,7 +42,7 @@ public class RecipeMapper {
         recipe.setIngredients(IngredientMapper.mapToApi(recipe.getId(), recipeEntity.getIngredients()));
 
         if (recipeEntity.getImageId() != null) {
-            Image image =  new Image();
+            Image image = new Image();
             image.setId(recipeEntity.getImageId());
             recipe.getImages().add(image);
         }
@@ -66,5 +66,44 @@ public class RecipeMapper {
             recipeEntity.setImageId(recipe.getImages().get(0).getId());
         }
         return recipeEntity;
+    }
+
+    public static String getDifficultyAsString(String difficultyAsNumber) {
+        if (difficultyAsNumber.equals(Difficulty.VERY_EASY.getValue())) {
+            return Difficulty.VERY_EASY.getName();
+        } else if (difficultyAsNumber.equals(Difficulty.EASY.getValue())) {
+            return Difficulty.EASY.getName();
+        } else if (difficultyAsNumber.equals(Difficulty.NORMAL.getValue())) {
+            return Difficulty.NORMAL.getName();
+        } else if (difficultyAsNumber.equals(Difficulty.HARD.getValue())) {
+            return Difficulty.HARD.getName();
+        } else {
+            return Difficulty.VERY_HARD.getName();
+        }
+    }
+
+    private enum Difficulty {
+        VERY_EASY("1", "sehr leicht"),
+        EASY("2", "leicht"),
+        NORMAL("3", "mittel"),
+        HARD("4", "schwer"),
+        VERY_HARD("5", "sehr schwer");
+
+
+        private final String value;
+        private final String identifier;
+
+        private Difficulty(String value, String identifier) {
+            this.value = value;
+            this.identifier = identifier;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getName() {
+            return identifier;
+        }
     }
 }

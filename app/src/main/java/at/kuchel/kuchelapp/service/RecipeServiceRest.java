@@ -55,11 +55,13 @@ public class RecipeServiceRest { //implements Observable
                 abstractRecipeActivity.handleRecipesFromRest(recipes);
                 GlobalParamService.storeGlobalParam(new GlobalParamBuilder().setKey(LAST_SYNC_DATE)
                         .setValue(String.valueOf(new Date().getTime())).build());
-                for (Recipe recipe : recipes) {
-                    if (recipe.getImages().size() > 0) {
+                if(recipes!=null){
+                    for (Recipe recipe : recipes) {
+                        if (recipe.getImages().size() > 0) {
 
-                        //todo check if update is needed
-                        retrieveImagesFromRestAndStoreToFileSystem(recipe.getId(), recipe.getImages().get(0).getId());
+                            //todo check if update is needed
+                            retrieveImagesFromRestAndStoreToFileSystem(recipe.getId(), recipe.getImages().get(0).getId());
+                        }
                     }
                 }
             }

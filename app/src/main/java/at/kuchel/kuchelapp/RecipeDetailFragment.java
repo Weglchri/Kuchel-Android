@@ -15,6 +15,7 @@ import at.kuchel.kuchelapp.api.Ingredient;
 import at.kuchel.kuchelapp.api.Instruction;
 import at.kuchel.kuchelapp.api.Recipe;
 import at.kuchel.kuchelapp.builder.RecipeBuilder;
+import at.kuchel.kuchelapp.mapper.RecipeMapper;
 import at.kuchel.kuchelapp.service.GlobalParamService;
 
 import static at.kuchel.kuchelapp.Constants.GLOBAL_PARAM.USERNAME;
@@ -56,7 +57,7 @@ public class RecipeDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recipe_detail, container, false);
 
         if (recipe != null) {
-            ((TextView) rootView.findViewById(R.id.textViewDifficulty)).setText(recipe.getDifficulty());
+            ((TextView) rootView.findViewById(R.id.textViewDifficulty)).setText(RecipeMapper.getDifficultyAsString(recipe.getDifficulty()));
             ((TextView) rootView.findViewById(R.id.textViewDuration)).setText(recipe.getDuration() + "min");
             ((TextView) rootView.findViewById(R.id.textViewCreator)).setText(recipe.getUsername());
 
