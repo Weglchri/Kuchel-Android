@@ -5,14 +5,12 @@ package at.kuchel.kuchelapp;
  */
 
 public class Constants {
-    public static final String BASE_URL = "http://10.0.0.21:8080/kuchel/api/";
-
+    public static final String BASE_URL = "http://kuchel.herokuapp.com/kuchel/api/";
 
     public static class GLOBAL_PARAM {
 
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
         public static final String LAST_SYNC_DATE = "last_sync_date";
-
     }
 }
